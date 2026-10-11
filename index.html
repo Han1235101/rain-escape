@@ -4,11 +4,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>雨中逃生 · 无限挑战</title>
+<title>雨中冒险 · 无限平台跳跃</title>
 
 <style>
 /* =========================
-   1. 页面基础样式
+   1. 页面与主题样式
    ========================= */
 * {
   box-sizing: border-box;
@@ -17,47 +17,42 @@
 }
 
 :root {
-  --text: #334155;
-  --muted: #738196;
-  --blue: #5b9de8;
-  --cyan: #7adce8;
-  --panel: rgba(255, 255, 255, 0.88);
+  --ink: #34465d;
+  --muted: #78889c;
+  --blue: #5b9ce8;
+  --cyan: #8ce6f2;
 }
 
 body {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 18px;
+  justify-content: center;
+  padding: 16px;
   overflow: hidden;
-  color: var(--text);
-  font-family:
-    Inter, "Segoe UI", "PingFang SC",
+  font-family: "Segoe UI", "PingFang SC",
     "Microsoft YaHei", sans-serif;
+  color: var(--ink);
   background:
-    radial-gradient(ellipse at 15% 15%, #e7eef5 0%, transparent 42%),
-    radial-gradient(ellipse at 85% 85%, #dce8f1 0%, transparent 45%),
-    linear-gradient(135deg, #f0f2f5, #dfe5eb);
+    radial-gradient(ellipse at 15% 15%, #f5f7fa, transparent 45%),
+    radial-gradient(ellipse at 85% 85%, #d8e4ee, transparent 45%),
+    linear-gradient(135deg, #e9edf2, #dce4ec);
 }
 
-/* =========================
-   2. 游戏容器
-   保留原来的单画布核心结构
-   ========================= */
+/* 游戏主容器：保留原有 Canvas 框架 */
 .game-container {
   position: relative;
-  width: min(960px, 100%);
-  height: min(640px, calc(100vh - 36px));
-  min-height: 360px;
+  width: min(1000px, 100%);
+  height: min(680px, calc(100vh - 32px));
+  min-height: 380px;
   overflow: hidden;
   isolation: isolate;
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid #ffffff;
   border-radius: 22px;
-  background: linear-gradient(160deg, #eef2f6, #e0e7ed);
+  background: #e5edf4;
   box-shadow:
-    0 25px 70px rgba(52, 72, 96, 0.16),
-    0 4px 12px rgba(52, 72, 96, 0.08);
+    0 24px 65px #4b627c25,
+    0 4px 12px #4b627c12;
 }
 
 canvas {
@@ -67,52 +62,51 @@ canvas {
 }
 
 /* =========================
-   3. 顶部信息栏
+   2. HUD 信息栏
    ========================= */
 .hud {
   position: absolute;
-  top: 18px;
-  left: 20px;
-  right: 20px;
   z-index: 2;
+  top: 15px;
+  left: 18px;
+  right: 18px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   pointer-events: none;
 }
 
 .hud-item {
-  min-width: 100px;
-  padding: 10px 15px;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  border-radius: 13px;
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: 0 5px 16px rgba(72, 94, 120, 0.07);
-  backdrop-filter: blur(12px);
+  min-width: 90px;
+  padding: 9px 13px;
+  border: 1px solid #ffffff;
+  border-radius: 12px;
+  background: #ffffffd9;
+  box-shadow: 0 4px 14px #40566e12;
+  backdrop-filter: blur(10px);
 }
 
 .hud-label {
   display: block;
   margin-bottom: 3px;
-  color: var(--muted);
-  font-size: 11px;
+  color: #8290a2;
+  font-size: 10px;
   letter-spacing: 1px;
 }
 
 .hud-value {
-  color: #344760;
-  font-size: 19px;
-  font-weight: 750;
+  color: #344b65;
+  font-size: 18px;
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
 
-.hud-value.highlight {
-  color: #398edb;
+.hud-value.blue {
+  color: #428ed9;
 }
 
 /* =========================
-   4. 开始和结束弹窗
+   3. 开始与结束弹窗
    ========================= */
 .overlay {
   position: absolute;
@@ -121,12 +115,12 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 22px;
-  background: rgba(221, 230, 239, 0.47);
-  backdrop-filter: blur(7px);
+  padding: 20px;
+  background: #dfe7efaa;
+  backdrop-filter: blur(8px);
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.3s ease, visibility 0.3s;
+  transition: opacity .3s ease, visibility .3s ease;
 }
 
 .overlay.hidden {
@@ -136,152 +130,138 @@ canvas {
 }
 
 .panel {
-  width: min(410px, 100%);
-  padding: 32px 28px;
+  width: min(420px, 100%);
+  padding: 30px 26px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  border-radius: 24px;
-  background: var(--panel);
-  box-shadow:
-    0 22px 65px rgba(51, 74, 102, 0.17),
-    0 3px 10px rgba(51, 74, 102, 0.06);
+  border: 1px solid #ffffff;
+  border-radius: 23px;
+  background: #ffffffed;
+  box-shadow: 0 20px 60px #344a621f;
   transform: translateY(0) scale(1);
-  transition: transform 0.35s ease;
+  transition: transform .3s ease;
 }
 
 .overlay.hidden .panel {
-  transform: translateY(12px) scale(0.97);
+  transform: translateY(12px) scale(.97);
 }
 
 .eyebrow {
   display: inline-block;
-  margin-bottom: 14px;
-  padding: 6px 11px;
-  color: #4b91d4;
-  background: #e6f3ff;
-  border-radius: 20px;
+  margin-bottom: 13px;
+  padding: 6px 12px;
+  color: #488fce;
+  background: #e9f4ff;
+  border-radius: 30px;
   font-size: 11px;
-  font-weight: 750;
+  font-weight: 800;
   letter-spacing: 1.5px;
 }
 
 .panel h1 {
   margin-bottom: 12px;
-  color: #2c3e55;
-  font-size: clamp(27px, 5vw, 35px);
-  font-weight: 800;
+  color: #30445e;
+  font-size: clamp(27px, 5vw, 36px);
   letter-spacing: -1px;
 }
 
 .panel p {
   margin: 9px 0;
-  color: #718096;
+  color: #728198;
   font-size: 14px;
   line-height: 1.9;
 }
 
-.panel .result {
+.result {
   margin: 20px 0;
-  color: #438edb;
-  font-size: 24px;
+  color: #438fdc;
+  font-size: 25px;
   font-weight: 800;
 }
 
-.panel .sub-result {
-  margin-top: -12px;
-  color: #8190a3;
-  font-size: 13px;
+.sub-result {
+  font-size: 13px !important;
 }
 
-/* =========================
-   5. 按钮与悬浮效果
-   ========================= */
 button {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 18px;
   padding: 14px 18px;
   border: 0;
-  border-radius: 13px;
+  border-radius: 12px;
   color: white;
-  background: linear-gradient(135deg, #6ba8ed, #508be0);
-  box-shadow: 0 8px 18px rgba(77, 143, 221, 0.25);
+  background: linear-gradient(135deg, #78b7f2, #4d8bdf);
+  box-shadow: 0 8px 20px #568fdc40;
   font-size: 15px;
-  font-weight: 750;
-  letter-spacing: 0.5px;
+  font-weight: 800;
   cursor: pointer;
-  transition:
-    transform 0.22s ease,
-    box-shadow 0.22s ease,
-    filter 0.22s ease;
+  transition: transform .2s, box-shadow .2s, filter .2s;
 }
 
 button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 24px rgba(77, 143, 221, 0.34);
-  filter: brightness(1.06);
+  box-shadow: 0 12px 25px #568fdc55;
+  filter: brightness(1.05);
 }
 
 button:active {
-  transform: translateY(0) scale(0.985);
+  transform: scale(.985);
 }
 
 button:focus-visible {
-  outline: 3px solid #9bcfff;
-  outline-offset: 4px;
+  outline: 3px solid #a7d4ff;
+  outline-offset: 3px;
 }
 
 .tips {
   position: absolute;
-  bottom: 13px;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  color: #8190a1;
+  bottom: 12px;
+  left: 10px;
+  right: 10px;
+  z-index: 2;
+  color: #74869b;
   text-align: center;
   font-size: 11px;
-  letter-spacing: 0.5px;
   pointer-events: none;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 540px) {
   body {
-    padding: 8px;
+    padding: 6px;
   }
 
   .game-container {
-    height: calc(100vh - 16px);
-    min-height: 340px;
-    border-radius: 16px;
+    height: calc(100vh - 12px);
+    min-height: 350px;
+    border-radius: 15px;
   }
 
   .hud {
-    top: 12px;
-    left: 10px;
-    right: 10px;
-    gap: 6px;
+    top: 10px;
+    left: 8px;
+    right: 8px;
+    gap: 5px;
   }
 
   .hud-item {
     min-width: 0;
-    padding: 8px 10px;
+    padding: 7px 8px;
   }
 
   .hud-label {
-    font-size: 9px;
+    font-size: 8px;
+    letter-spacing: .3px;
   }
 
   .hud-value {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .panel {
-    padding: 27px 20px;
+    padding: 25px 19px;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    transition-duration: 0.01ms !important;
+  .tips {
+    font-size: 9px;
   }
 }
 </style>
@@ -291,23 +271,21 @@ button:focus-visible {
 
 <main class="game-container" id="gameContainer">
 
-  <!-- 游戏画布：背景、门、玩家和雨滴均由 Canvas 绘制 -->
-  <canvas id="gameCanvas" aria-label="雨中逃生游戏画面"></canvas>
+  <!-- 游戏主画布：场景、角色、雨滴和平台全部由 Canvas 绘制 -->
+  <canvas id="gameCanvas"></canvas>
 
-  <!-- 实时游戏信息 -->
+  <!-- 实时分数和关卡 -->
   <div class="hud">
     <div class="hud-item">
-      <span class="hud-label">CURRENT SCORE</span>
-      <span class="hud-value highlight" id="score">0</span>
+      <span class="hud-label">SCORE / 分数</span>
+      <span class="hud-value blue" id="score">0</span>
     </div>
-
     <div class="hud-item">
-      <span class="hud-label">LEVEL</span>
+      <span class="hud-label">LEVEL / 关卡</span>
       <span class="hud-value" id="level">01</span>
     </div>
-
     <div class="hud-item">
-      <span class="hud-label">RAIN DROPS</span>
+      <span class="hud-label">RAIN / 雨滴</span>
       <span class="hud-value" id="rainCount">0</span>
     </div>
   </div>
@@ -315,38 +293,42 @@ button:focus-visible {
   <!-- 开始界面 -->
   <section class="overlay" id="startScreen">
     <div class="panel">
-      <span class="eyebrow">ENDLESS SURVIVAL</span>
-      <h1>雨中逃生</h1>
-      <p>穿过雨幕，找到出口。<br>每前进一步，挑战都会更难。</p>
+      <span class="eyebrow">RAINY PLATFORM ADVENTURE</span>
+      <h1>雨中冒险</h1>
+      <p>跳过障碍，踩上平台，寻找避雨棚。<br>穿越雨幕，抵达最右侧的出口！</p>
       <p>
-        ← → / A D 移动<br>
-        躲避雨滴，抵达右侧的蓝色出口门。
+        ← → / A D：左右移动<br>
+        空格 / ↑ / W：跳跃<br>
+        雨棚顶部可以避雨，碰到障碍不会死亡。
       </p>
-      <button id="startButton">开始挑战 →</button>
+      <button id="startButton">开始冒险 →</button>
     </div>
   </section>
 
   <!-- 游戏结束界面 -->
   <section class="overlay hidden" id="gameOverScreen">
     <div class="panel">
-      <span class="eyebrow">GAME OVER</span>
-      <h1>雨势太大了</h1>
-      <p>别担心，再试一次就好。</p>
-      <div class="result" id="finalResult">得分 0</div>
+      <span class="eyebrow">ADVENTURE PAUSED</span>
+      <h1>冒险结束</h1>
+      <p>雨滴击中了你，再来一次吧！</p>
+      <div class="result" id="finalResult">得分：0</div>
       <p class="sub-result" id="finalLevel">到达关卡：1</p>
       <button id="restartButton">重新开始 ↻</button>
     </div>
   </section>
 
-  <div class="tips">MOVE WITH ← → OR A / D &nbsp; · &nbsp; REACH THE DOOR TO LEVEL UP</div>
+  <div class="tips">
+    ← → 移动　·　SPACE 跳跃　·　站在雨棚下方的平台即可避雨
+  </div>
+
 </main>
 
 <script>
 "use strict";
 
-/* ==========================================
-   1. 获取画布和界面元素
-   ========================================== */
+/* ==============================================
+   1. 获取画布、容器和界面元素
+   ============================================== */
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const container = document.getElementById("gameContainer");
@@ -360,51 +342,58 @@ const gameOverScreen = document.getElementById("gameOverScreen");
 const startButton = document.getElementById("startButton");
 const restartButton = document.getElementById("restartButton");
 
-/* ==========================================
+/* ==============================================
    2. 游戏配置
-   ========================================== */
+   ============================================== */
 const CONFIG = {
-  playerSize: 28,
-  playerSpeed: 310,
+  // 玩家尺寸与运动参数
+  playerWidth: 28,
+  playerHeight: 32,
+  moveSpeed: 250,
+  jumpSpeed: 490,
+  gravity: 1250,
 
-  // 玩家加速度：让移动更自然
-  playerAcceleration: 1800,
-
+  // 雨滴参数
   rainWidth: 5,
   rainHeight: 17,
-
-  baseRainSpeed: 175,
-  rainSpeedIncrease: 28,
-
-  // 每关降低生成间隔，增加雨滴数量
+  baseRainSpeed: 165,
+  rainSpeedIncrease: 22,
   baseSpawnInterval: 0.72,
-  minSpawnInterval: 0.13,
+  minSpawnInterval: 0.15,
 
-  // 每过 4 关，额外增加每批雨滴数量
-  extraDropsEveryLevels: 4,
+  // 每隔几关额外增加一批雨滴
+  extraDropsEveryLevels: 3,
 
-  // 通关过渡时长
-  levelTransitionDuration: 0.55
+  // 玩家掉出世界多远后判定失败
+  fallDeathMargin: 160
 };
 
-/* ==========================================
-   3. 游戏状态
-   ========================================== */
+/* ==============================================
+   3. 游戏状态与世界数据
+   ============================================== */
 let W = 0;
 let H = 0;
 
 let gameRunning = false;
 let animationId = null;
 let lastTime = 0;
-let spawnTimer = 0;
 
 let score = 0;
 let level = 1;
+let spawnTimer = 0;
 
-// 通关动画倒计时
+// 世界总宽度大于屏幕宽度，镜头随玩家移动
+let worldWidth = 2400;
+let cameraX = 0;
+
+// 每关的地形、障碍、雨棚、雨滴
+let platforms = [];
+let obstacles = [];
+let canopies = [];
+let raindrops = [];
+
+// 通关过渡
 let transitionTimer = 0;
-
-// 通关光效动画进度
 let levelFlash = 0;
 
 // 键盘状态
@@ -413,28 +402,66 @@ const keys = {
   right: false
 };
 
-/* ==========================================
+/* ==============================================
    4. 玩家对象
-   x 为当前实际位置，targetX 为目标位置
-   ========================================== */
+   ============================================== */
 const player = {
-  x: 30,
-  targetX: 30,
+  x: 35,
   y: 0,
-  width: CONFIG.playerSize,
-  height: CONFIG.playerSize,
-  color: "#67c8f3"
+  vx: 0,
+  vy: 0,
+  width: CONFIG.playerWidth,
+  height: CONFIG.playerHeight,
+  grounded: false,
+  color: "#6bc9f0"
 };
 
-// 雨滴数组
-let raindrops = [];
+/* ==============================================
+   5. 通用工具函数
+   ============================================== */
 
-/* ==========================================
-   5. 调整画布尺寸
-   ========================================== */
+// 限制数字范围
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+// 线性插值
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+// 矩形碰撞检测：两个矩形是否相交
+function intersects(a, b) {
+  return (
+    a.x < b.x + b.width &&
+    a.x + a.width > b.x &&
+    a.y < b.y + b.height &&
+    a.y + a.height > b.y
+  );
+}
+
+// 圆角矩形绘制工具
+function roundedRect(ctx, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+/* ==============================================
+   6. 画布尺寸适配
+   ============================================== */
 function resizeCanvas() {
   const rect = container.getBoundingClientRect();
-  const oldW = W;
 
   W = rect.width;
   H = rect.height;
@@ -444,239 +471,450 @@ function resizeCanvas() {
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
 
-  // 画布内部使用 CSS 像素坐标
+  // 使用 CSS 像素作为绘图坐标
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  player.y = H - player.height - 34;
-
-  // 窗口变化时，保持玩家在画面内
-  if (oldW > 0) {
-    const ratio = W / oldW;
-    player.x *= ratio;
-    player.targetX *= ratio;
+  // 调整画布后，重新生成符合当前屏幕高度的关卡
+  if (gameRunning) {
+    buildLevel();
+  } else {
+    draw();
   }
-
-  clampPlayer();
-
-  // 调整时清理超出可视区域的雨滴
-  raindrops = raindrops.filter(rain =>
-    rain.x >= -20 && rain.x <= W + 20
-  );
-
-  draw();
 }
 
 window.addEventListener("resize", resizeCanvas);
 
-/* ==========================================
-   6. 通用辅助函数
-   ========================================== */
+/* ==============================================
+   7. 生成每一关的横版地图
+   世界坐标不随镜头移动
+   ============================================== */
+function buildLevel() {
+  worldWidth = Math.max(2200, W * 2.5);
 
-// 将数字限制在指定区间
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+  platforms = [];
+  obstacles = [];
+  canopies = [];
+  raindrops = [];
+
+  const groundY = H - 72;
+
+  // 起点与终点之间设置较长的连续地面
+  // 平台是可站立表面，不代表致命障碍
+  platforms.push({
+    x: 0,
+    y: groundY,
+    width: worldWidth,
+    height: 72,
+    type: "ground"
+  });
+
+  // 关卡平台布局：在固定位置生成高低不同的平台
+  const platformSpecs = [
+    { x: 250, y: 0.73, w: 125 },
+    { x: 455, y: 0.62, w: 130 },
+    { x: 720, y: 0.72, w: 150 },
+    { x: 970, y: 0.58, w: 140 },
+    { x: 1220, y: 0.69, w: 150 },
+    { x: 1500, y: 0.56, w: 140 },
+    { x: 1760, y: 0.69, w: 155 },
+    { x: 2040, y: 0.61, w: 130 }
+  ];
+
+  for (const spec of platformSpecs) {
+    // 高度使用相对画布尺寸计算
+    const py = Math.min(
+      groundY - 90,
+      Math.max(groundY - 200, H * spec.y)
+    );
+
+    platforms.push({
+      x: spec.x,
+      y: py,
+      width: spec.w,
+      height: 15,
+      type: "platform"
+    });
+  }
+
+  // 固定障碍物：碰到时阻挡玩家，但不造成死亡
+  const obstacleSpecs = [
+    { x: 155, w: 32, h: 38 },
+    { x: 390, w: 35, h: 45 },
+    { x: 640, w: 32, h: 34 },
+    { x: 900, w: 38, h: 48 },
+    { x: 1150, w: 34, h: 38 },
+    { x: 1425, w: 38, h: 45 },
+    { x: 1680, w: 32, h: 36 },
+    { x: 1970, w: 38, h: 44 }
+  ];
+
+  for (const spec of obstacleSpecs) {
+    // 障碍物落在地面上
+    obstacles.push({
+      x: spec.x,
+      y: groundY - spec.h,
+      width: spec.w,
+      height: spec.h
+    });
+  }
+
+  // 避雨棚：每个雨棚都有一块可以站立的顶部平台
+  // 玩家站在顶部时不受雨滴伤害
+  const canopySpecs = [
+    { x: 510, y: 0.46, w: 115 },
+    { x: 1050, y: 0.43, w: 125 },
+    { x: 1585, y: 0.45, w: 120 }
+  ];
+
+  for (const spec of canopySpecs) {
+    const cy = Math.min(
+      groundY - 115,
+      Math.max(80, H * spec.y)
+    );
+
+    canopies.push({
+      x: spec.x,
+      y: cy,
+      width: spec.w,
+      height: 13,
+      roofHeight: 13
+    });
+
+    // 雨棚顶部也属于可站立平台
+    platforms.push({
+      x: spec.x,
+      y: cy,
+      width: spec.w,
+      height: 13,
+      type: "canopy"
+    });
+  }
+
+  // 终点门保持在世界最右侧
+  cameraX = clamp(cameraX, 0, Math.max(0, worldWidth - W));
 }
 
-// 平滑插值：数值逐渐接近目标
-function lerp(current, target, amount) {
-  return current + (target - current) * amount;
+/* ==============================================
+   8. 生成雨滴
+   雨滴在镜头当前可见区域上方随机出现
+   ============================================== */
+function spawnRain() {
+  const speed =
+    CONFIG.baseRainSpeed +
+    (level - 1) * CONFIG.rainSpeedIncrease +
+    Math.random() * 55;
+
+  // 将屏幕坐标转换为世界坐标
+  const x = cameraX + Math.random() * W;
+
+  raindrops.push({
+    x,
+    y: -25 - Math.random() * 70,
+    speed,
+    angle: (Math.random() - 0.5) * 0.2,
+    rotationSpeed: (Math.random() - 0.5) * 1.1,
+    opacity: 1,
+    fadeOut: false
+  });
 }
 
-// 确保玩家不能越过左右边界
-function clampPlayer() {
-  const maxX = Math.max(0, W - player.width);
-
-  player.x = clamp(player.x, 0, maxX);
-  player.targetX = clamp(player.targetX, 0, maxX);
-}
-
-/* ==========================================
-   7. 绘制浅灰渐变背景
-   ========================================== */
+/* ==============================================
+   9. 绘制背景
+   ============================================== */
 function drawBackground() {
-  const gradient = ctx.createLinearGradient(0, 0, W, H);
+  const bg = ctx.createLinearGradient(0, 0, W, H);
 
-  gradient.addColorStop(0, "#edf1f5");
-  gradient.addColorStop(0.5, "#e4eaf0");
-  gradient.addColorStop(1, "#d8e2eb");
+  bg.addColorStop(0, "#f0f3f6");
+  bg.addColorStop(0.55, "#e4ebf1");
+  bg.addColorStop(1, "#d6e1ea");
 
-  ctx.fillStyle = gradient;
+  ctx.fillStyle = bg;
   ctx.fillRect(0, 0, W, H);
 
-  // 背景柔和光斑
+  // 远处的柔和光斑
   const glow = ctx.createRadialGradient(
-    W * 0.3, H * 0.35, 5,
-    W * 0.3, H * 0.35, W * 0.65
+    W * 0.25, H * 0.28, 5,
+    W * 0.25, H * 0.28, W * 0.65
   );
 
-  glow.addColorStop(0, "rgba(255,255,255,0.55)");
-  glow.addColorStop(1, "rgba(255,255,255,0)");
+  glow.addColorStop(0, "#ffffff8c");
+  glow.addColorStop(1, "#ffffff00");
 
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, W, H);
 
-  // 远处建筑剪影
-  ctx.fillStyle = "rgba(136, 159, 181, 0.13)";
+  // 远景建筑，随镜头缓慢移动产生视差效果
+  ctx.save();
+  ctx.fillStyle = "#9fb2c525";
 
-  for (let i = 0; i < 9; i++) {
-    const bw = 30 + (i % 3) * 24;
-    const bh = 70 + (i % 4) * 24;
-    const bx = i * W / 8 - 12;
+  for (let i = -1; i < 10; i++) {
+    const baseX = i * 170 - (cameraX * 0.18 % 170);
+    const bh = 70 + ((i + 10) % 4) * 23;
 
-    ctx.fillRect(bx, H - 75 - bh, bw, bh);
+    ctx.fillRect(baseX, H - 72 - bh, 90, bh);
 
-    // 建筑窗户
-    ctx.fillStyle = "rgba(255,255,255,0.23)";
+    ctx.fillStyle = "#ffffff45";
 
-    for (let wy = H - 65 - bh; wy < H - 90; wy += 17) {
-      ctx.fillRect(bx + 8, wy, 5, 7);
+    for (let wy = H - 85 - bh; wy < H - 100; wy += 19) {
+      ctx.fillRect(baseX + 14, wy, 8, 9);
+      ctx.fillRect(baseX + 36, wy, 8, 9);
     }
 
-    ctx.fillStyle = "rgba(136, 159, 181, 0.13)";
+    ctx.fillStyle = "#9fb2c525";
   }
 
-  // 地面阴影
-  const groundY = H - 34;
+  ctx.restore();
 
-  const groundGradient = ctx.createLinearGradient(
-    0, groundY, 0, H
-  );
+  // 地面
+  const groundY = H - 72;
 
-  groundGradient.addColorStop(0, "#cbd6e0");
-  groundGradient.addColorStop(1, "#e0e7ee");
+  const ground = ctx.createLinearGradient(0, groundY, 0, H);
+  ground.addColorStop(0, "#d0dbe4");
+  ground.addColorStop(1, "#e5ebf0");
 
-  ctx.fillStyle = groundGradient;
-  ctx.fillRect(0, groundY, W, 34);
+  ctx.fillStyle = ground;
+  ctx.fillRect(0, groundY, W, 72);
 
-  ctx.strokeStyle = "rgba(114, 140, 164, 0.42)";
-  ctx.lineWidth = 1;
-
+  ctx.strokeStyle = "#aebdca";
+  ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(0, groundY);
   ctx.lineTo(W, groundY);
   ctx.stroke();
 
-  // 地面细节线
-  ctx.strokeStyle = "rgba(255,255,255,0.45)";
+  // 地面纹理
+  ctx.strokeStyle = "#ffffff70";
+  ctx.lineWidth = 1;
 
-  for (let x = 12; x < W; x += 46) {
+  for (let x = -20; x < W + 30; x += 48) {
     ctx.beginPath();
-    ctx.moveTo(x, H - 14);
-    ctx.lineTo(x + 20, H - 14);
+    ctx.moveTo(x, groundY + 22);
+    ctx.lineTo(x + 20, groundY + 22);
     ctx.stroke();
   }
 }
 
-/* ==========================================
-   8. 绘制终点门
-   ========================================== */
+/* ==============================================
+   10. 绘制平台
+   ============================================== */
+function drawPlatforms() {
+  for (const p of platforms) {
+    // 连续地面已在背景中绘制，只绘制高处平台
+    if (p.type === "ground") continue;
+
+    ctx.save();
+
+    ctx.shadowColor = "#607d9825";
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetY = 3;
+
+    const gradient = ctx.createLinearGradient(
+      p.x, p.y, p.x, p.y + p.height
+    );
+
+    if (p.type === "canopy") {
+      gradient.addColorStop(0, "#b9e9f1");
+      gradient.addColorStop(1, "#72b9cf");
+    } else {
+      gradient.addColorStop(0, "#a6c7e5");
+      gradient.addColorStop(1, "#729ec8");
+    }
+
+    roundedRect(ctx, p.x, p.y, p.width, p.height, 5);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // 平台上沿高光
+    ctx.strokeStyle = "#ffffffb8";
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+    ctx.moveTo(p.x + 5, p.y + 1);
+    ctx.lineTo(p.x + p.width - 5, p.y + 1);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+}
+
+/* ==============================================
+   11. 绘制障碍物
+   障碍只阻挡移动，不会杀死玩家
+   ============================================== */
+function drawObstacles() {
+  for (const o of obstacles) {
+    ctx.save();
+
+    ctx.shadowColor = "#6174892b";
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetY = 4;
+
+    const gradient = ctx.createLinearGradient(
+      o.x, o.y, o.x + o.width, o.y + o.height
+    );
+
+    gradient.addColorStop(0, "#f0cda8");
+    gradient.addColorStop(1, "#c99568");
+
+    roundedRect(ctx, o.x, o.y, o.width, o.height, 6);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    ctx.restore();
+
+    // 障碍物装饰线
+    ctx.strokeStyle = "#ffffff70";
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+    ctx.moveTo(o.x + 7, o.y + 8);
+    ctx.lineTo(o.x + o.width - 7, o.y + 8);
+    ctx.stroke();
+  }
+}
+
+/* ==============================================
+   12. 绘制避雨棚
+   雨棚本身带有独立的遮雨屋顶
+   ============================================== */
+function drawCanopies() {
+  for (const c of canopies) {
+    ctx.save();
+
+    // 屋顶投影
+    ctx.shadowColor = "#467b922d";
+    ctx.shadowBlur = 12;
+    ctx.shadowOffsetY = 4;
+
+    const roof = ctx.createLinearGradient(
+      c.x, c.y, c.x, c.y + c.roofHeight
+    );
+
+    roof.addColorStop(0, "#d7f6fb");
+    roof.addColorStop(1, "#77c6d8");
+
+    roundedRect(
+      ctx,
+      c.x, c.y - 5,
+      c.width, c.roofHeight,
+      6
+    );
+
+    ctx.fillStyle = roof;
+    ctx.fill();
+
+    ctx.restore();
+
+    // 雨棚支柱
+    ctx.strokeStyle = "#76a8b9";
+    ctx.lineWidth = 4;
+
+    ctx.beginPath();
+    ctx.moveTo(c.x + 10, c.y + 4);
+    ctx.lineTo(c.x + 10, c.y + 26);
+    ctx.moveTo(c.x + c.width - 10, c.y + 4);
+    ctx.lineTo(c.x + c.width - 10, c.y + 26);
+    ctx.stroke();
+
+    // 雨棚上沿高光
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+    ctx.moveTo(c.x + 8, c.y - 3);
+    ctx.lineTo(c.x + c.width - 8, c.y - 3);
+    ctx.stroke();
+  }
+}
+
+/* ==============================================
+   13. 绘制终点门
+   ============================================== */
 function getDoor() {
-  const width = 43;
-  const height = 76;
+  const width = 48;
+  const height = 82;
 
   return {
-    x: W - width - 12,
-    y: H - 34 - height,
+    x: worldWidth - width - 24,
+    y: H - 72 - height,
     width,
     height
   };
 }
 
 function drawDoor() {
-  const door = getDoor();
+  const d = getDoor();
 
-  // 门的投影
   ctx.save();
-  ctx.shadowColor = "rgba(64, 107, 153, 0.24)";
-  ctx.shadowBlur = 16;
-  ctx.shadowOffsetY = 5;
 
-  const frameGradient = ctx.createLinearGradient(
-    door.x, door.y, door.x + door.width, door.y
+  ctx.shadowColor = "#5c9ee85c";
+  ctx.shadowBlur = 17;
+  ctx.shadowOffsetY = 3;
+
+  const frame = ctx.createLinearGradient(
+    d.x, d.y, d.x + d.width, d.y
   );
 
-  frameGradient.addColorStop(0, "#a8c5df");
-  frameGradient.addColorStop(0.5, "#d5e6f5");
-  frameGradient.addColorStop(1, "#86add2");
+  frame.addColorStop(0, "#8db9e4");
+  frame.addColorStop(0.5, "#e1f2ff");
+  frame.addColorStop(1, "#77a7d7");
 
-  // 门框
-  ctx.fillStyle = frameGradient;
-  ctx.fillRect(
-    door.x - 4,
-    door.y - 4,
-    door.width + 8,
-    door.height + 4
-  );
+  ctx.fillStyle = frame;
+  ctx.fillRect(d.x - 5, d.y - 5, d.width + 10, d.height + 5);
 
   ctx.restore();
 
-  // 门板渐变
-  const panelGradient = ctx.createLinearGradient(
-    door.x, door.y, door.x + door.width, door.y + door.height
+  const doorGradient = ctx.createLinearGradient(
+    d.x, d.y, d.x + d.width, d.y + d.height
   );
 
-  panelGradient.addColorStop(0, "#8cb9e7");
-  panelGradient.addColorStop(1, "#548ac5");
+  doorGradient.addColorStop(0, "#92c0ed");
+  doorGradient.addColorStop(1, "#4d87c6");
 
-  ctx.fillStyle = panelGradient;
-  ctx.fillRect(door.x, door.y, door.width, door.height);
+  ctx.fillStyle = doorGradient;
+  ctx.fillRect(d.x, d.y, d.width, d.height);
 
-  // 门板装饰
-  ctx.strokeStyle = "rgba(255,255,255,0.42)";
-  ctx.lineWidth = 1.5;
-  ctx.strokeRect(
-    door.x + 5, door.y + 5,
-    door.width - 10, door.height - 10
-  );
+  ctx.strokeStyle = "#ffffff85";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(d.x + 5, d.y + 5, d.width - 10, d.height - 10);
 
-  // 窗户
-  const windowGradient = ctx.createLinearGradient(
-    door.x, door.y + 8, door.x + 30, door.y + 35
-  );
+  // 门上的窗户
+  ctx.fillStyle = "#eafaff";
+  ctx.fillRect(d.x + 12, d.y + 10, 24, 25);
 
-  windowGradient.addColorStop(0, "#effaff");
-  windowGradient.addColorStop(1, "#b1e2f5");
+  ctx.strokeStyle = "#8cbbe0";
+  ctx.lineWidth = 1;
 
-  ctx.fillStyle = windowGradient;
-  ctx.fillRect(door.x + 11, door.y + 10, 22, 22);
-
-  // 窗户分隔线
-  ctx.strokeStyle = "rgba(89,139,182,0.55)";
   ctx.beginPath();
-  ctx.moveTo(door.x + 22, door.y + 10);
-  ctx.lineTo(door.x + 22, door.y + 32);
-  ctx.moveTo(door.x + 11, door.y + 21);
-  ctx.lineTo(door.x + 33, door.y + 21);
+  ctx.moveTo(d.x + 24, d.y + 10);
+  ctx.lineTo(d.x + 24, d.y + 35);
+  ctx.moveTo(d.x + 12, d.y + 22);
+  ctx.lineTo(d.x + 36, d.y + 22);
   ctx.stroke();
 
   // 门把手
-  ctx.save();
-  ctx.shadowColor = "rgba(255,224,147,0.8)";
-  ctx.shadowBlur = 5;
-  ctx.fillStyle = "#ffe3a0";
+  ctx.fillStyle = "#ffe5a5";
   ctx.beginPath();
-  ctx.arc(door.x + 33, door.y + 49, 3, 0, Math.PI * 2);
+  ctx.arc(d.x + 36, d.y + 51, 3, 0, Math.PI * 2);
   ctx.fill();
-  ctx.restore();
 
-  // 出口文字
-  ctx.save();
-  ctx.fillStyle = "#5984ae";
+  // 出口标记
+  ctx.fillStyle = "#4b80b5";
   ctx.font = "bold 11px sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("EXIT", door.x + door.width / 2, door.y - 13);
-  ctx.restore();
+  ctx.fillText("EXIT", d.x + d.width / 2, d.y - 14);
+  ctx.textAlign = "left";
 }
 
-/* ==========================================
-   9. 绘制玩家
-   柔和渐变、阴影和细节装饰
-   ========================================== */
+/* ==============================================
+   14. 绘制玩家
+   ============================================== */
 function drawPlayer() {
   ctx.save();
 
-  ctx.shadowColor = "rgba(72, 174, 221, 0.35)";
-  ctx.shadowBlur = 14;
+  // 投影
+  ctx.shadowColor = "#3e9dcc55";
+  ctx.shadowBlur = 13;
   ctx.shadowOffsetY = 4;
 
   const gradient = ctx.createLinearGradient(
@@ -684,11 +922,10 @@ function drawPlayer() {
     player.x + player.width, player.y + player.height
   );
 
-  gradient.addColorStop(0, "#9ceafa");
-  gradient.addColorStop(0.5, "#65c9ee");
-  gradient.addColorStop(1, "#439bd7");
+  gradient.addColorStop(0, "#b4f2ff");
+  gradient.addColorStop(0.5, "#70d2f0");
+  gradient.addColorStop(1, "#419bd6");
 
-  // 圆角方块
   roundedRect(
     ctx,
     player.x, player.y,
@@ -702,115 +939,65 @@ function drawPlayer() {
   ctx.restore();
 
   // 顶部高光
-  ctx.fillStyle = "rgba(255,255,255,0.5)";
+  ctx.fillStyle = "#ffffff9c";
+
   roundedRect(
     ctx,
     player.x + 5, player.y + 4,
-    player.width - 10, 4,
-    2
+    player.width - 10, 4, 2
   );
+
   ctx.fill();
 
   // 眼睛
-  ctx.fillStyle = "#285776";
+  ctx.fillStyle = "#285676";
+
   ctx.beginPath();
   ctx.arc(player.x + 9, player.y + 13, 2, 0, Math.PI * 2);
   ctx.arc(player.x + 19, player.y + 13, 2, 0, Math.PI * 2);
   ctx.fill();
 
   // 微笑
-  ctx.strokeStyle = "#285776";
-  ctx.lineWidth = 1.7;
+  ctx.strokeStyle = "#285676";
+  ctx.lineWidth = 1.6;
   ctx.lineCap = "round";
 
   ctx.beginPath();
   ctx.moveTo(player.x + 9, player.y + 20);
   ctx.quadraticCurveTo(
-    player.x + 14, player.y + 25,
+    player.x + 14, player.y + 24,
     player.x + 19, player.y + 20
   );
   ctx.stroke();
 }
 
-/* ==========================================
-   10. 圆角矩形工具
-   ========================================== */
-function roundedRect(ctx, x, y, width, height, radius) {
-  const r = Math.min(radius, width / 2, height / 2);
-
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + width - r, y);
-  ctx.quadraticCurveTo(x + width, y, x + width, y + r);
-  ctx.lineTo(x + width, y + height - r);
-  ctx.quadraticCurveTo(
-    x + width, y + height,
-    x + width - r, y + height
-  );
-  ctx.lineTo(x + r, y + height);
-  ctx.quadraticCurveTo(
-    x, y + height,
-    x, y + height - r
-  );
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
-  ctx.closePath();
-}
-
-/* ==========================================
-   11. 创建雨滴
-   难度随关卡递增
-   ========================================== */
-function spawnRain() {
-  const margin = 8;
-
-  // 关卡越高，速度越快
-  const speed =
-    CONFIG.baseRainSpeed +
-    (level - 1) * CONFIG.rainSpeedIncrease +
-    Math.random() * 65;
-
-  raindrops.push({
-    x: margin + Math.random() * Math.max(1, W - margin * 2),
-    y: -CONFIG.rainHeight - Math.random() * 25,
-    speed,
-    angle: (Math.random() - 0.5) * 0.25,
-    rotationSpeed: (Math.random() - 0.5) * 1.1,
-    opacity: 1,
-    fadeOut: false,
-    color: Math.random() > 0.5 ? "#63b8ef" : "#8dd9f2"
-  });
-}
-
-/* ==========================================
-   12. 绘制雨滴
-   旋转、渐变、柔和发光
-   ========================================== */
+/* ==============================================
+   15. 绘制雨滴
+   ============================================== */
 function drawRaindrops() {
   ctx.save();
   ctx.lineCap = "round";
 
   for (const rain of raindrops) {
+    // 世界坐标转换成屏幕坐标
+    const screenX = rain.x - cameraX;
+
+    // 不绘制远离视口的雨滴
+    if (screenX < -30 || screenX > W + 30) continue;
+
     ctx.save();
 
-    // 以雨滴中心作为旋转轴
-    const centerY = rain.y + CONFIG.rainHeight / 2;
-
-    ctx.translate(rain.x, centerY);
+    ctx.translate(screenX, rain.y);
     ctx.rotate(rain.angle);
     ctx.globalAlpha = rain.opacity;
 
-    ctx.shadowColor = "rgba(71, 171, 232, 0.32)";
-    ctx.shadowBlur = 7;
+    ctx.shadowColor = "#55b8ed65";
+    ctx.shadowBlur = 6;
 
-    const gradient = ctx.createLinearGradient(
-      -2, -CONFIG.rainHeight / 2,
-      3, CONFIG.rainHeight / 2
-    );
-
-    gradient.addColorStop(0, "#b4e9ff");
-    gradient.addColorStop(0.45, rain.color);
-    gradient.addColorStop(1, "#458fd0");
+    const gradient = ctx.createLinearGradient(0, -9, 0, 9);
+    gradient.addColorStop(0, "#c9f3ff");
+    gradient.addColorStop(0.5, "#76c9f2");
+    gradient.addColorStop(1, "#4b91d2");
 
     ctx.strokeStyle = gradient;
     ctx.lineWidth = CONFIG.rainWidth;
@@ -826,81 +1013,226 @@ function drawRaindrops() {
   ctx.restore();
 }
 
-/* ==========================================
-   13. 通关光效
-   通关后柔和淡出
-   ========================================== */
+/* ==============================================
+   16. 绘制通关闪光
+   ============================================== */
 function drawLevelFlash() {
   if (levelFlash <= 0) return;
 
   ctx.save();
-  ctx.globalAlpha = levelFlash * 0.35;
+  ctx.globalAlpha = levelFlash * 0.3;
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, W, H);
   ctx.restore();
 }
 
-/* ==========================================
-   14. 绘制整张画面
-   ========================================== */
+/* ==============================================
+   17. 统一绘制场景
+   在绘制世界对象前后切换镜头坐标
+   ============================================== */
 function draw() {
   if (W <= 0 || H <= 0) return;
 
   drawBackground();
+
+  // 世界对象需要减去镜头偏移
+  ctx.save();
+  ctx.translate(-cameraX, 0);
+
+  drawPlatforms();
+  drawObstacles();
+  drawCanopies();
   drawDoor();
+
+  ctx.restore();
+
+  // 雨滴函数内部会处理世界坐标转屏幕坐标
   drawRaindrops();
+
+  // 玩家也使用世界坐标，因此同样转换镜头
+  ctx.save();
+  ctx.translate(-cameraX, 0);
   drawPlayer();
+  ctx.restore();
+
   drawLevelFlash();
 }
 
-/* ==========================================
-   15. 平滑更新玩家位置
-   ========================================== */
+/* ==============================================
+   18. 玩家水平碰撞
+   障碍物与平台侧面都会阻挡玩家
+   ============================================== */
+function movePlayerX(dx) {
+  if (dx === 0) return;
+
+  const oldX = player.x;
+  player.x += dx;
+
+  // 世界边界限制
+  player.x = clamp(
+    player.x,
+    0,
+    worldWidth - player.width
+  );
+
+  for (const obstacle of obstacles) {
+    if (!intersects(player, obstacle)) continue;
+
+    // 根据运动方向将玩家推回障碍边缘
+    if (dx > 0) {
+      player.x = obstacle.x - player.width;
+    } else if (dx < 0) {
+      player.x = obstacle.x + obstacle.width;
+    }
+  }
+
+  // 平台侧面同样阻挡玩家
+  // 仅处理从平台侧面穿入的情况
+  for (const p of platforms) {
+    if (p.type === "ground") continue;
+    if (!intersects(player, p)) continue;
+
+    if (dx > 0 && oldX + player.width <= p.x + 1) {
+      player.x = p.x - player.width;
+    } else if (
+      dx < 0 &&
+      oldX >= p.x + p.width - 1
+    ) {
+      player.x = p.x + p.width;
+    }
+  }
+
+  // 修正数值误差
+  player.x = clamp(
+    player.x,
+    0,
+    worldWidth - player.width
+  );
+}
+
+/* ==============================================
+   19. 跳跃与重力
+   只有 grounded 为 true 才能起跳
+   ============================================== */
+function jump() {
+  if (!gameRunning || transitionTimer > 0) return;
+
+  // 未落地时不允许再次跳跃，避免无限跳
+  if (!player.grounded) return;
+
+  player.vy = -CONFIG.jumpSpeed;
+  player.grounded = false;
+}
+
+/* ==============================================
+   20. 垂直移动与落地检测
+   玩家可以落在地面、平台和雨棚顶部
+   ============================================== */
+function updatePlayerVertical(dt) {
+  const oldBottom = player.y + player.height;
+
+  // 重力让玩家逐渐下落
+  player.vy += CONFIG.gravity * dt;
+  player.y += player.vy * dt;
+
+  player.grounded = false;
+
+  // 只在向下运动时判定落地
+  if (player.vy >= 0) {
+    const newBottom = player.y + player.height;
+
+    for (const p of platforms) {
+      // 玩家必须与平台水平重叠
+      const horizontalOverlap =
+        player.x + player.width > p.x &&
+        player.x < p.x + p.width;
+
+      if (!horizontalOverlap) continue;
+
+      // 从平台上方穿过平台顶面时，落到平台上
+      if (
+        oldBottom <= p.y + 3 &&
+        newBottom >= p.y &&
+        player.y < p.y
+      ) {
+        player.y = p.y - player.height;
+        player.vy = 0;
+        player.grounded = true;
+      }
+    }
+
+    // 处理重力步长较大时的平台顶面碰撞
+    if (!player.grounded) {
+      for (const p of platforms) {
+        const horizontalOverlap =
+          player.x + player.width > p.x &&
+          player.x < p.x + p.width;
+
+        if (!horizontalOverlap) continue;
+
+        if (
+          player.y + player.height >= p.y &&
+          player.y + player.height <= p.y + p.height + 8 &&
+          oldBottom <= p.y + p.height
+        ) {
+          player.y = p.y - player.height;
+          player.vy = 0;
+          player.grounded = true;
+          break;
+        }
+      }
+    }
+  }
+
+  // 玩家掉出世界后结束游戏，避免无限下落
+  if (player.y > H + CONFIG.fallDeathMargin) {
+    endGame("fall");
+  }
+}
+
+/* ==============================================
+   21. 更新玩家移动
+   水平方向允许空中控制
+   ============================================== */
 function updatePlayer(dt) {
   let direction = 0;
 
   if (keys.left) direction -= 1;
   if (keys.right) direction += 1;
 
-  // 目标位置按键盘输入持续变化
-  player.targetX += direction * CONFIG.playerSpeed * dt;
+  const dx = direction * CONFIG.moveSpeed * dt;
 
-  // 限制目标位置，避免移动出画布
-  player.targetX = clamp(
-    player.targetX,
-    0,
-    Math.max(0, W - player.width)
-  );
+  movePlayerX(dx);
+  updatePlayerVertical(dt);
+}
 
-  // 插值让玩家平滑跟随目标位置
-  const smooth = 1 - Math.exp(-CONFIG.playerAcceleration / CONFIG.playerSpeed * dt);
+/* ==============================================
+   22. 检查玩家是否处于雨棚保护区域
+   只有站在雨棚顶部才获得保护
+   ============================================== */
+function isUnderCanopy() {
+  for (const canopy of canopies) {
+    const standingOnTop =
+      Math.abs(
+        player.y + player.height - canopy.y
+      ) < 2;
 
-  player.x = lerp(player.x, player.targetX, smooth);
+    const horizontalOverlap =
+      player.x + player.width > canopy.x &&
+      player.x < canopy.x + canopy.width;
 
-  // 避免无限接近造成的小数误差
-  if (Math.abs(player.x - player.targetX) < 0.05) {
-    player.x = player.targetX;
+    if (standingOnTop && horizontalOverlap) {
+      return true;
+    }
   }
 
-  clampPlayer();
+  return false;
 }
 
-/* ==========================================
-   16. 矩形碰撞检测
-   ========================================== */
-function isColliding(a, b) {
-  return (
-    a.x < b.x + b.width &&
-    a.x + a.width > b.x &&
-    a.y < b.y + b.height &&
-    a.y + a.height > b.y
-  );
-}
-
-/* ==========================================
-   17. 更新雨滴
-   包含旋转、下落、消失淡出和碰撞
-   ========================================== */
+/* ==============================================
+   23. 雨滴更新与碰撞检测
+   雨棚上的玩家不会被雨滴击中
+   ============================================== */
 function updateRaindrops(dt) {
   for (let i = raindrops.length - 1; i >= 0; i--) {
     const rain = raindrops[i];
@@ -908,45 +1240,54 @@ function updateRaindrops(dt) {
     rain.y += rain.speed * dt;
     rain.angle += rain.rotationSpeed * dt;
 
-    // 雨滴进入画面底部时，逐渐淡出
-    const fadeStart = H - 65;
+    // 雨滴接近画布底部时渐隐
+    const fadeStart = H - 25;
 
     if (rain.y > fadeStart) {
       rain.opacity = clamp(
-        (H + 10 - rain.y) / (H + 10 - fadeStart),
+        (H + 20 - rain.y) / (H + 20 - fadeStart),
         0,
         1
       );
     }
 
-    // 雨滴完全离开画布后删除
-    if (rain.y - CONFIG.rainHeight > H) {
+    // 完全离开画布的雨滴直接移除
+    if (rain.y - CONFIG.rainHeight > H + 5) {
       raindrops.splice(i, 1);
       continue;
     }
 
-    // 透明度很低的雨滴不再参与碰撞
-    if (rain.opacity < 0.08) continue;
+    // 玩家站在雨棚上时受到保护
+    if (isUnderCanopy()) continue;
 
-    // 构造雨滴的碰撞矩形
+    // 转换成屏幕坐标检测雨滴和玩家
+    const rainScreenX = rain.x - cameraX;
+
     const rainBox = {
-      x: rain.x - 5,
+      x: rainScreenX - 3,
       y: rain.y - CONFIG.rainHeight / 2,
-      width: 8,
+      width: 7,
       height: CONFIG.rainHeight
     };
 
-    if (isColliding(player, rainBox)) {
-      endGame();
+    const playerScreen = {
+      x: player.x - cameraX,
+      y: player.y,
+      width: player.width,
+      height: player.height
+    };
+
+    // 透明雨滴不参与碰撞
+    if (rain.opacity > 0.1 && intersects(playerScreen, rainBox)) {
+      endGame("rain");
       return;
     }
   }
 }
 
-/* ==========================================
-   18. 生成难度
-   每关生成间隔更短，每批雨滴数量递增
-   ========================================== */
+/* ==============================================
+   24. 无限关卡与难度递增
+   ============================================== */
 function getSpawnInterval() {
   return Math.max(
     CONFIG.minSpawnInterval,
@@ -960,28 +1301,31 @@ function getDropsPerSpawn() {
   );
 }
 
-/* ==========================================
-   19. 检测通关
-   玩家到达右侧出口即进入下一关
-   ========================================== */
+/* ==============================================
+   25. 终点检测
+   ============================================== */
 function checkDoor() {
   const door = getDoor();
 
-  // 玩家方块与门的区域重叠时视为通关
-  if (
-    player.x + player.width > door.x + 2 &&
-    player.y + player.height > door.y
-  ) {
+  const nearDoor =
+    player.x + player.width >= door.x &&
+    player.x <= door.x + door.width;
+
+  const verticallyAligned =
+    player.y + player.height >= door.y &&
+    player.y < door.y + door.height;
+
+  if (nearDoor && verticallyAligned) {
     completeLevel();
   }
 }
 
-/* ==========================================
-   20. 通关处理
-   加分、升关、返回起点并播放淡入淡出效果
-   ========================================== */
+/* ==============================================
+   26. 通关动画
+   分数递增，重置玩家并生成下一关
+   ============================================== */
 function completeLevel() {
-  if (transitionTimer > 0 || !gameRunning) return;
+  if (!gameRunning || transitionTimer > 0) return;
 
   score++;
   level++;
@@ -989,129 +1333,159 @@ function completeLevel() {
   scoreElement.textContent = score;
   levelElement.textContent = String(level).padStart(2, "0");
 
-  // 开启短暂的通关过渡
-  transitionTimer = CONFIG.levelTransitionDuration;
+  // 通关时短暂播放淡入淡出光效
+  transitionTimer = 0.45;
   levelFlash = 1;
 
-  // 玩家回到起点
-  player.x = 24;
-  player.targetX = 24;
+  // 生成下一关地形和雨棚
+  buildLevel();
 
-  // 清除键盘输入，防止跨关持续移动
+  // 玩家回到起点
+  player.x = 35;
+  player.y = H - 72 - player.height;
+  player.vx = 0;
+  player.vy = 0;
+  player.grounded = true;
+
+  // 重置镜头
+  cameraX = 0;
+
+  // 清除按键状态
   keys.left = false;
   keys.right = false;
 
-  // 不清空现存雨滴，保持游戏连续性
+  // 雨滴数组随新关卡重置
+  raindrops = [];
+  spawnTimer = 0;
 }
 
-/* ==========================================
-   21. 游戏主循环
-   requestAnimationFrame 保持动画流畅
-   ========================================== */
+/* ==============================================
+   27. 镜头跟随玩家
+   玩家接近屏幕中间后，镜头向右平滑滚动
+   ============================================== */
+function updateCamera(dt) {
+  const desiredCameraX = clamp(
+    player.x - W * 0.38,
+    0,
+    Math.max(0, worldWidth - W)
+  );
+
+  // 使用指数插值实现镜头平滑跟随
+  const smoothing = 1 - Math.exp(-5 * dt);
+
+  cameraX = lerp(cameraX, desiredCameraX, smoothing);
+}
+
+/* ==============================================
+   28. 游戏主循环
+   ============================================== */
 function gameLoop(timestamp) {
   if (!gameRunning) return;
 
-  // 第一帧只记录时间
+  // 限制单帧最大时间，避免窗口卡顿造成角色穿透
   const dt = lastTime === 0
     ? 0
-    : Math.min((timestamp - lastTime) / 1000, 0.04);
+    : Math.min((timestamp - lastTime) / 1000, 0.025);
 
   lastTime = timestamp;
 
-  // 更新通关动画倒计时
+  // 更新过渡动画
   if (transitionTimer > 0) {
     transitionTimer = Math.max(0, transitionTimer - dt);
   }
 
-  // 通关光效逐渐消失
   levelFlash = Math.max(0, levelFlash - dt * 2.5);
 
-  // 通关过渡期间暂时停止玩家移动
+  // 通关过渡期间暂时冻结角色运动
   if (transitionTimer <= 0) {
     updatePlayer(dt);
+
+    // 玩家还在游戏中时检查出口
+    if (gameRunning) {
+      checkDoor();
+    }
   }
 
-  // 根据当前关卡生成雨滴
+  // 更新镜头
+  updateCamera(dt);
+
+  // 生成雨滴
   spawnTimer += dt;
 
   const interval = getSpawnInterval();
 
-  // 每批生成一定数量的雨滴
   while (spawnTimer >= interval) {
     spawnTimer -= interval;
 
-    const batchSize = getDropsPerSpawn();
+    const count = getDropsPerSpawn();
 
-    for (let i = 0; i < batchSize; i++) {
+    for (let i = 0; i < count; i++) {
       spawnRain();
     }
   }
 
-  // 更新雨滴位置和碰撞
+  // 更新雨滴和碰撞
   updateRaindrops(dt);
 
-  // 碰撞导致游戏结束时停止本帧
+  // 若本帧碰撞导致游戏结束，则停止循环
   if (!gameRunning) return;
 
-  // 只有不在通关过渡期间才检测门
-  if (transitionTimer <= 0) {
-    checkDoor();
-  }
-
-  // 更新雨滴数量
   rainCountElement.textContent = raindrops.length;
 
-  // 绘制当前画面
+  // 绘制完整场景
   draw();
 
-  // 请求下一帧
   animationId = requestAnimationFrame(gameLoop);
 }
 
-/* ==========================================
-   22. 开始或重新开始游戏
-   ========================================== */
+/* ==============================================
+   29. 开始或重新开始游戏
+   ============================================== */
 function startGame() {
-  // 取消上一次可能残留的动画循环
   if (animationId !== null) {
     cancelAnimationFrame(animationId);
     animationId = null;
   }
 
-  // 重置游戏状态
+  // 重置全部游戏状态
   score = 0;
   level = 1;
   lastTime = 0;
   spawnTimer = 0;
   transitionTimer = 0;
   levelFlash = 0;
-
-  raindrops = [];
-
-  player.x = 24;
-  player.targetX = 24;
-  player.y = H - player.height - 34;
+  cameraX = 0;
 
   keys.left = false;
   keys.right = false;
+
+  player.x = 35;
+  player.y = H - 72 - player.height;
+  player.vx = 0;
+  player.vy = 0;
+  player.grounded = true;
 
   scoreElement.textContent = "0";
   levelElement.textContent = "01";
   rainCountElement.textContent = "0";
 
+  // 生成第一关
+  buildLevel();
+
+  // 隐藏所有弹窗
   startScreen.classList.add("hidden");
   gameOverScreen.classList.add("hidden");
 
   gameRunning = true;
+  draw();
 
-  // 启动游戏循环
   animationId = requestAnimationFrame(gameLoop);
 }
 
-/* ==========================================
-   23. 游戏结束
-   ========================================== */
-function endGame() {
+/* ==============================================
+   30. 游戏结束
+   ============================================== */
+function endGame(reason = "rain") {
   if (!gameRunning) return;
 
   gameRunning = false;
@@ -1120,35 +1494,35 @@ function endGame() {
   keys.right = false;
 
   document.getElementById("finalResult").textContent =
-    "得分 " + score;
+    "得分：" + score;
 
   document.getElementById("finalLevel").textContent =
-    "成功到达第 " + level + " 关";
+    "到达关卡：" + level +
+    (reason === "fall" ? " · 掉出了平台" : " · 被雨滴击中");
 
-  // 停止游戏动画
   if (animationId !== null) {
     cancelAnimationFrame(animationId);
     animationId = null;
   }
 
-  // 先绘制最后一帧，再展示结束界面
   draw();
-
   gameOverScreen.classList.remove("hidden");
 }
 
-/* ==========================================
-   24. 键盘控制
-   支持方向键和 A / D
-   ========================================== */
+/* ==============================================
+   31. 键盘事件
+   ============================================== */
 window.addEventListener("keydown", function(event) {
   const key = event.key.toLowerCase();
 
   if (
     key === "arrowleft" ||
     key === "arrowright" ||
+    key === "arrowup" ||
+    key === " " ||
     key === "a" ||
-    key === "d"
+    key === "d" ||
+    key === "w"
   ) {
     event.preventDefault();
   }
@@ -1159,6 +1533,19 @@ window.addEventListener("keydown", function(event) {
 
   if (key === "arrowright" || key === "d") {
     keys.right = true;
+  }
+
+  // 空格、上方向键或 W 都可以跳跃
+  // jump() 内部会检查 grounded，防止无限跳
+  if (
+    key === " " ||
+    key === "arrowup" ||
+    key === "w"
+  ) {
+    // 长按空格不会在空中重复起跳
+    if (!event.repeat) {
+      jump();
+    }
   }
 });
 
@@ -1174,22 +1561,22 @@ window.addEventListener("keyup", function(event) {
   }
 });
 
-// 切换窗口或切换标签页时释放按键，避免角色持续移动
+// 切换标签页或窗口失焦时，释放全部按键
 window.addEventListener("blur", function() {
   keys.left = false;
   keys.right = false;
 });
 
-// 开始与重新开始按钮
+// 按钮事件
 startButton.addEventListener("click", startGame);
 restartButton.addEventListener("click", startGame);
 
-/* ==========================================
-   25. 初始化
-   ========================================== */
+/* ==============================================
+   32. 初始化
+   ============================================== */
 resizeCanvas();
 draw();
-</script>
 
+</script>
 </body>
 </html>
