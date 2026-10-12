@@ -6,139 +6,174 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>躲雨大冒险</title>
 <style>
-* { box-sizing: border-box; }
+  :root {
+    color-scheme: dark;
+    --panel: rgba(13, 27, 48, .9);
+    --line: rgba(255,255,255,.14);
+  }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 18px;
-  background: radial-gradient(ellipse at top, #1c4266, #0b1728 60%, #050a12);
-  color: #eef7ff;
-  font-family: system-ui, sans-serif;
-}
+  * { box-sizing: border-box; }
 
-.game-shell { width: min(1100px, 100%); }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(ellipse at top, #1c4266 0%, #0b1728 60%, #050a12 100%);
+    color: #eef7ff;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 18px;
+  }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 12px;
-}
+  .game-shell { width: min(1100px, 100%); }
 
-h1 { margin: 0; font-size: 28px; }
-.subtitle { color: #a8c5df; font-size: 13px; margin-top: 4px; }
-.hud { display: flex; gap: 8px; flex-wrap: wrap; }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
 
-.pill {
-  background: rgba(13,27,48,.9);
-  border: 1px solid #ffffff24;
-  border-radius: 999px;
-  padding: 8px 13px;
-  font-weight: bold;
-  font-size: 14px;
-}
+  h1 {
+    font-size: clamp(22px, 4vw, 32px);
+    margin: 0;
+    letter-spacing: .04em;
+  }
 
-.pill span { color: #71e5ff; }
+  .subtitle {
+    color: #a8c5df;
+    font-size: 13px;
+    margin-top: 4px;
+  }
 
-.stage {
-  position: relative;
-  overflow: hidden;
-  border-radius: 18px;
-  border: 1px solid #9bd2ff40;
-  box-shadow: 0 20px 70px #0008;
-  background: #12283e;
-}
+  .hud { display: flex; gap: 8px; flex-wrap: wrap; }
 
-canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
-}
+  .pill {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 13px;
+    font-weight: 700;
+    font-size: 14px;
+  }
 
-.status {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: #0b1728dd;
-  border: 1px solid #6bffc1a6;
-  font-size: 13px;
-  font-weight: bold;
-  opacity: 0;
-  pointer-events: none;
-  white-space: nowrap;
-}
+  .pill span { color: #71e5ff; }
 
-.status.visible { opacity: 1; color: #9affc5; }
+  .stage {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid rgba(155,210,255,.25);
+    box-shadow: 0 20px 70px #0008;
+    background: #12283e;
+  }
 
-.overlay {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: linear-gradient(#07132155, #071321d9);
-}
+  canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
 
-.overlay.hidden { display: none; }
+  .status {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #0b1728c9;
+    border: 1px solid #ffffff2b;
+    font-size: 13px;
+    font-weight: 800;
+    opacity: 0;
+    transition: opacity .12s;
+    pointer-events: none;
+    white-space: nowrap;
+  }
 
-.panel {
-  width: min(420px, 100%);
-  padding: 26px;
-  text-align: center;
-  border-radius: 18px;
-  background: #071220f2;
-  border: 1px solid #ffffff24;
-}
+  .status.visible {
+    opacity: 1;
+    color: #9affc5;
+    border-color: #6bffc1a6;
+    box-shadow: 0 0 22px #38ffad35;
+  }
 
-.panel h2 { margin: 0 0 8px; font-size: 28px; }
-.panel p { color: #b5cbe0; line-height: 1.6; }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: linear-gradient(#07132155, #071321c9);
+  }
 
-button {
-  border: 0;
-  border-radius: 999px;
-  padding: 12px 22px;
-  background: linear-gradient(135deg, #50e3ff, #6ef3b5);
-  color: #082032;
-  font-weight: 900;
-  cursor: pointer;
-  font-size: 15px;
-}
+  .overlay.hidden { display: none; }
 
-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  color: #8caac4;
-  font-size: 12px;
-  margin-top: 12px;
-}
+  .panel {
+    width: min(420px, 100%);
+    padding: 26px;
+    text-align: center;
+    border-radius: 18px;
+    background: rgba(7,18,32,.94);
+    border: 1px solid #ffffff24;
+    box-shadow: 0 16px 60px #0008;
+  }
 
-kbd {
-  border: 1px solid #ffffff38;
-  background: #ffffff12;
-  padding: 2px 6px;
-  border-radius: 5px;
-}
+  .panel h2 { margin: 0 0 8px; font-size: 28px; }
+
+  .panel p {
+    color: #b5cbe0;
+    line-height: 1.6;
+    margin: 8px 0 18px;
+  }
+
+  button {
+    border: 0;
+    border-radius: 999px;
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #50e3ff, #6ef3b5);
+    color: #082032;
+    font-weight: 900;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  button:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    color: #8caac4;
+    font-size: 12px;
+    margin-top: 12px;
+  }
+
+  kbd {
+    border: 1px solid #ffffff38;
+    background: #ffffff12;
+    padding: 2px 6px;
+    border-radius: 5px;
+    color: #eaf7ff;
+  }
 </style>
 </head>
-<body>
 
+<body>
 <div class="game-shell">
   <header>
     <div>
       <h1>☔ 躲雨大冒险</h1>
       <div class="subtitle">躲开雨滴，借助雨棚安全前进，抵达终点门！</div>
     </div>
+
     <div class="hud">
       <div class="pill">关卡 <span id="level">1</span></div>
       <div class="pill">分数 <span id="score">0</span></div>
@@ -147,7 +182,8 @@ kbd {
   </header>
 
   <div class="stage">
-    <canvas id="game" width="960" height="540"></canvas>
+    <canvas id="game" width="960" height="540"
+      aria-label="躲雨大冒险游戏画面"></canvas>
 
     <div id="shelterStatus" class="status">
       ☂ 避雨中：雨棚正在保护你
@@ -158,7 +194,7 @@ kbd {
         <h2 id="overlayTitle">准备好了吗？</h2>
         <p id="overlayText">
           使用方向键或 A / D 移动，按空格跳跃。
-          站上蓝色雨棚顶部即可躲雨，抵达右侧的门进入下一关。
+          站上雨棚顶部即可躲雨，抵达右侧的门进入下一关。
         </p>
         <button id="startButton">开始游戏</button>
       </div>
@@ -166,809 +202,798 @@ kbd {
   </div>
 
   <footer>
-    <div>移动：<kbd>←</kbd> <kbd>→</kbd> 或 <kbd>A</kbd> <kbd>D</kbd>　跳跃：<kbd>空格</kbd> / <kbd>↑</kbd></div>
-    <div>提示：站上蓝色雨棚顶部，看到“避雨中”即代表保护生效。</div>
+    <div>
+      移动：<kbd>←</kbd> <kbd>→</kbd> 或 <kbd>A</kbd> <kbd>D</kbd>
+     　跳跃：<kbd>空格</kbd> / <kbd>↑</kbd>
+    </div>
+    <div>提示：跳到蓝色雨棚顶部，看到“避雨中”即代表保护生效。</div>
   </footer>
 </div>
 
 <script>
-"use strict";
+(() => {
+  "use strict";
 
-// ==================== 基础设置 ====================
+  // ===== 画布与界面 =====
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
 
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+  const levelEl = document.getElementById("level");
+  const scoreEl = document.getElementById("score");
+  const gameStateEl = document.getElementById("gameState");
 
-const levelEl = document.getElementById("level");
-const scoreEl = document.getElementById("score");
-const gameStateEl = document.getElementById("gameState");
+  const overlay = document.getElementById("overlay");
+  const overlayTitle = document.getElementById("overlayTitle");
+  const overlayText = document.getElementById("overlayText");
+  const startButton = document.getElementById("startButton");
+  const shelterStatus = document.getElementById("shelterStatus");
 
-const overlay = document.getElementById("overlay");
-const overlayTitle = document.getElementById("overlayTitle");
-const overlayText = document.getElementById("overlayText");
-const startButton = document.getElementById("startButton");
-const shelterStatus = document.getElementById("shelterStatus");
+  const W = canvas.width;
+  const H = canvas.height;
+  const GROUND_Y = 462;
+  const GRAVITY = 1800;
+  const keys = new Set();
 
-const W = canvas.width;
-const H = canvas.height;
-const GROUND_Y = 462;
-const GRAVITY = 1800;
+  let running = false;
+  let gameOver = false;
+  let level = 1;
+  let score = 0;
 
-const keys = new Set();
+  let cameraX = 0;
+  let worldWidth = 2400;
 
-let running = false;
-let gameOver = false;
-let level = 1;
-let score = 0;
-let cameraX = 0;
-let worldWidth = 2400;
+  let platforms = [];
+  let canopies = [];
+  let obstacles = [];
+  let raindrops = [];
 
-let platforms = [];
-let canopies = [];
-let obstacles = [];
-let raindrops = [];
+  let spawnTimer = 0;
+  let lastTime = 0;
+  let frameId = 0;
+  let levelTransition = 0;
 
-let spawnTimer = 0;
-let lastTime = 0;
-let frameId = 0;
-let levelTransition = 0;
+  const player = {
+    x: 60,
+    y: GROUND_Y - 42,
+    width: 28,
+    height: 42,
+    vx: 0,
+    vy: 0,
+    speed: 280,
+    jumpSpeed: 650,
+    onGround: false,
+    protected: false,
+    invulnerable: 0
+  };
 
-// 玩家属性
-const player = {
-  x: 60,
-  y: GROUND_Y - 42,
-  width: 28,
-  height: 42,
-  vx: 0,
-  vy: 0,
-  speed: 280,
-  jumpSpeed: 650,
-  onGround: true,
-  protected: false,
-  invulnerable: 0
-};
-
-// 矩形碰撞检测
-function intersects(a, b) {
-  return (
-    a.x < b.x + b.width &&
-    a.x + a.width > b.x &&
-    a.y < b.y + b.height &&
-    a.y + a.height > b.y
-  );
-}
-
-// ==================== 关卡生成 ====================
-
-function buildLevel() {
-  worldWidth = 2400 + Math.min(level - 1, 20) * 110;
-
-  platforms = [];
-  canopies = [];
-  obstacles = [];
-  raindrops = [];
-
-  // 地面
-  platforms.push({
-    x: 0,
-    y: GROUND_Y,
-    width: worldWidth,
-    height: H - GROUND_Y,
-    kind: "ground"
-  });
-
-  // 普通跳跃平台
-  const platformSpecs = [
-    [250, 390, 145],
-    [500, 330, 150],
-    [790, 385, 160],
-    [1080, 320, 150],
-    [1370, 375, 160],
-    [1650, 310, 160],
-    [1940, 370, 155],
-    [2220, 325, 145]
-  ];
-
-  platformSpecs.forEach(([x, y, width]) => {
-    if (x < worldWidth - 100) {
-      platforms.push({
-        x, y, width,
-        height: 18,
-        kind: "platform"
-      });
-    }
-  });
-
-  // 雨棚也是可以站立的平台
-  const canopySpecs = [
-    [420, 400, 125],
-    [700, 345, 130],
-    [970, 405, 140],
-    [1260, 350, 130],
-    [1540, 400, 140],
-    [1830, 340, 135],
-    [2110, 395, 140]
-  ];
-
-  canopySpecs.forEach(([x, y, width]) => {
-    if (x < worldWidth - 100) {
-      const canopy = {
-        x, y, width,
-        height: 16,
-        kind: "canopy"
-      };
-
-      canopies.push(canopy);
-      platforms.push(canopy);
-    }
-  });
-
-  // 固定障碍：碰到会被阻挡，不会死亡
-  const obstacleSpecs = [
-    [610, GROUND_Y - 38, 36, 38],
-    [900, GROUND_Y - 48, 42, 48],
-    [1190, GROUND_Y - 34, 36, 34],
-    [1470, GROUND_Y - 54, 44, 54],
-    [1760, GROUND_Y - 40, 38, 40],
-    [2040, GROUND_Y - 48, 42, 48]
-  ];
-
-  obstacleSpecs.forEach(([x, y, width, height]) => {
-    obstacles.push({ x, y, width, height });
-  });
-
-  // 重置玩家位置
-  player.x = 60;
-  player.y = GROUND_Y - player.height;
-  player.vx = 0;
-  player.vy = 0;
-  player.onGround = true;
-  player.protected = false;
-  player.invulnerable = 0;
-
-  cameraX = 0;
-  spawnTimer = 0.2;
-  levelTransition = 0;
-
-  updateHud();
-}
-
-// ==================== HUD 更新 ====================
-
-function updateHud() {
-  levelEl.textContent = String(level);
-  scoreEl.textContent = String(score);
-
-  if (!running) {
-    gameStateEl.textContent = gameOver ? "挑战结束" : "准备开始";
-  } else {
-    gameStateEl.textContent = player.protected ? "避雨中" : "进行中";
-  }
-}
-
-// ==================== 避雨判定（关键功能） ====================
-
-/*
- * 判断玩家是否真正站在雨棚顶部。
- *
- * 必须满足：
- * 1. 玩家与雨棚有水平重叠；
- * 2. 玩家脚底接近雨棚顶面；
- * 3. 玩家身体位于雨棚上方。
- *
- * 使用少量容差，避免浮点数误差造成保护失效。
- */
-function isUnderCanopy() {
-  const playerFeet = player.y + player.height;
-  const playerLeft = player.x;
-  const playerRight = player.x + player.width;
-
-  return canopies.some(canopy => {
-    const horizontalOverlap =
-      playerRight > canopy.x + 1 &&
-      playerLeft < canopy.x + canopy.width - 1;
-
-    const feetNearTop =
-      playerFeet >= canopy.y - 7 &&
-      playerFeet <= canopy.y + 7;
-
-    const bodyAboveCanopy =
-      player.y < canopy.y + 2;
-
+  // 矩形碰撞检测：边缘接触不算重叠。
+  function intersects(a, b) {
     return (
-      horizontalOverlap &&
-      feetNearTop &&
-      bodyAboveCanopy
+      a.x < b.x + b.width &&
+      a.x + a.width > b.x &&
+      a.y < b.y + b.height &&
+      a.y + a.height > b.y
     );
-  });
-}
-
-// ==================== 玩家水平移动 ====================
-
-function movePlayerX(dx) {
-  if (dx === 0) return;
-
-  player.x += dx;
-
-  // 不允许走出世界
-  player.x = Math.max(
-    0,
-    Math.min(worldWidth - player.width, player.x)
-  );
-
-  // 障碍物侧面碰撞
-  for (const obstacle of obstacles) {
-    if (!intersects(player, obstacle)) continue;
-
-    if (dx > 0) {
-      player.x = obstacle.x - player.width;
-    } else {
-      player.x = obstacle.x + obstacle.width;
-    }
   }
 
-  // 平台侧面碰撞
-  for (const p of platforms) {
-    if (p.kind === "ground" || !intersects(player, p)) {
-      continue;
-    }
+  // ===== 生成关卡 =====
+  function buildLevel() {
+    // 每过一关，关卡世界变长。
+    worldWidth = 2400 + Math.min(level - 1, 20) * 110;
 
-    if (dx > 0) {
-      player.x = p.x - player.width;
-    } else {
-      player.x = p.x + p.width;
-    }
+    platforms = [];
+    canopies = [];
+    obstacles = [];
+    raindrops = [];
+
+    // 连续地面。
+    platforms.push({
+      x: 0,
+      y: GROUND_Y,
+      width: worldWidth,
+      height: H - GROUND_Y,
+      kind: "ground"
+    });
+
+    // 普通跳跃平台。
+    const platformSpecs = [
+      [250, 390, 145],
+      [500, 330, 150],
+      [790, 385, 160],
+      [1080, 320, 150],
+      [1370, 375, 160],
+      [1650, 310, 160],
+      [1940, 370, 155],
+      [2220, 325, 145]
+    ];
+
+    platformSpecs.forEach(([x, y, width]) => {
+      if (x < worldWidth - 100) {
+        platforms.push({
+          x, y, width,
+          height: 18,
+          kind: "platform"
+        });
+      }
+    });
+
+    // 雨棚也可以站立。
+    const canopySpecs = [
+      [420, 400, 125],
+      [700, 345, 130],
+      [970, 405, 140],
+      [1260, 350, 130],
+      [1540, 400, 140],
+      [1830, 340, 135],
+      [2110, 395, 140]
+    ];
+
+    canopySpecs.forEach(([x, y, width]) => {
+      if (x < worldWidth - 100) {
+        const canopy = {
+          x, y, width,
+          height: 16,
+          kind: "canopy"
+        };
+
+        canopies.push(canopy);
+        platforms.push(canopy);
+      }
+    });
+
+    // 固定障碍：碰到侧面会被挡住，但不会死亡。
+    const obstacleSpecs = [
+      [610, GROUND_Y - 38, 36, 38],
+      [900, GROUND_Y - 48, 42, 48],
+      [1190, GROUND_Y - 34, 36, 34],
+      [1470, GROUND_Y - 54, 44, 54],
+      [1760, GROUND_Y - 40, 38, 40],
+      [2040, GROUND_Y - 48, 42, 48]
+    ];
+
+    obstacleSpecs.forEach(([x, y, width, height]) => {
+      obstacles.push({ x, y, width, height });
+    });
+
+    // 重置玩家和镜头。
+    player.x = 60;
+    player.y = GROUND_Y - player.height;
+    player.vx = 0;
+    player.vy = 0;
+    player.onGround = true;
+    player.protected = false;
+    player.invulnerable = 0;
+
+    cameraX = 0;
+    spawnTimer = 0.2;
+    levelTransition = 0;
+
+    updateHud();
   }
-}
 
-// ==================== 玩家垂直运动与落地 ====================
+  function updateHud() {
+    levelEl.textContent = String(level);
+    scoreEl.textContent = String(score);
 
-function updatePlayerVertical(dt) {
-  const oldY = player.y;
-  const oldFeet = oldY + player.height;
+    gameStateEl.textContent = !running
+      ? (gameOver ? "挑战结束" : "准备开始")
+      : (player.protected ? "避雨中" : "进行中");
+  }
 
-  // 重力
-  player.vy += GRAVITY * dt;
-  player.y += player.vy * dt;
+  // ===== 雨棚保护判定 =====
+  // 玩家脚底贴近雨棚顶面且水平重叠时，判定为安全。
+  function isUnderCanopy() {
+    const feet = player.y + player.height;
+    const playerLeft = player.x;
+    const playerRight = player.x + player.width;
 
-  player.onGround = false;
-
-  // 只允许下落时落到平台顶部
-  if (player.vy >= 0) {
-    const newFeet = player.y + player.height;
-    let landing = null;
-
-    for (const p of platforms) {
+    return canopies.some(canopy => {
       const horizontalOverlap =
-        player.x + player.width > p.x + 2 &&
-        player.x < p.x + p.width - 2;
+        playerRight > canopy.x + 1 &&
+        playerLeft < canopy.x + canopy.width - 1;
 
-      const crossedTop =
-        oldFeet <= p.y + 3 &&
-        newFeet >= p.y;
+      // 允许少量浮点误差。
+      const feetNearTop =
+        feet >= canopy.y - 7 &&
+        feet <= canopy.y + 7;
 
-      if (horizontalOverlap && crossedTop) {
-        if (!landing || p.y < landing.y) {
-          landing = p;
-        }
+      const bodyAboveCanopy =
+        player.y < canopy.y + 2;
+
+      return horizontalOverlap && feetNearTop && bodyAboveCanopy;
+    });
+  }
+
+  // ===== 玩家水平移动 =====
+  function movePlayerX(dx) {
+    if (!dx) return;
+
+    player.x = Math.max(
+      0,
+      Math.min(worldWidth - player.width, player.x + dx)
+    );
+
+    // 普通平台和雨棚不阻挡侧面；
+    // 只有固定障碍物会阻挡水平移动。
+    for (const obstacle of obstacles) {
+      if (!intersects(player, obstacle)) continue;
+
+      if (dx > 0) {
+        player.x = obstacle.x - player.width;
+      } else {
+        player.x = obstacle.x + obstacle.width;
       }
     }
 
-    if (landing) {
-      player.y = landing.y - player.height;
+    player.x = Math.max(
+      0,
+      Math.min(worldWidth - player.width, player.x)
+    );
+  }
+
+  // ===== 玩家垂直移动与落地 =====
+  function updatePlayerVertical(dt) {
+    const oldY = player.y;
+    const oldFeet = oldY + player.height;
+
+    player.vy += GRAVITY * dt;
+    player.y += player.vy * dt;
+    player.onGround = false;
+
+    // 只有下落时才能落在平台上。
+    if (player.vy >= 0) {
+      const newFeet = player.y + player.height;
+      let landing = null;
+
+      for (const p of platforms) {
+        const horizontalOverlap =
+          player.x + player.width > p.x + 2 &&
+          player.x < p.x + p.width - 2;
+
+        const crossedTop =
+          oldFeet <= p.y + 3 &&
+          newFeet >= p.y;
+
+        if (horizontalOverlap && crossedTop) {
+          if (!landing || p.y < landing.y) {
+            landing = p;
+          }
+        }
+      }
+
+      if (landing) {
+        player.y = landing.y - player.height;
+        player.vy = 0;
+        player.onGround = true;
+      }
+    }
+
+    // 兜底：防止角色掉出画面。
+    if (player.y > H + 100) {
+      player.y = GROUND_Y - player.height;
       player.vy = 0;
       player.onGround = true;
     }
   }
 
-  // 防止角色掉出画面
-  if (player.y > H + 100) {
-    player.y = GROUND_Y - player.height;
-    player.vy = 0;
-    player.onGround = true;
+  function updatePlayer(dt) {
+    let direction = 0;
+
+    if (keys.has("ArrowLeft") || keys.has("KeyA")) {
+      direction -= 1;
+    }
+
+    if (keys.has("ArrowRight") || keys.has("KeyD")) {
+      direction += 1;
+    }
+
+    player.vx = direction * player.speed;
+
+    movePlayerX(player.vx * dt);
+    updatePlayerVertical(dt);
+
+    // 物理更新之后立即计算保护状态。
+    player.protected = isUnderCanopy();
+
+    player.invulnerable = Math.max(
+      0,
+      player.invulnerable - dt
+    );
+
+    // 镜头跟随玩家。
+    cameraX = Math.max(
+      0,
+      Math.min(worldWidth - W, player.x - W * 0.35)
+    );
   }
-}
 
-// ==================== 玩家更新 ====================
-
-function updatePlayer(dt) {
-  let direction = 0;
-
-  if (keys.has("ArrowLeft") || keys.has("KeyA")) {
-    direction -= 1;
-  }
-
-  if (keys.has("ArrowRight") || keys.has("KeyD")) {
-    direction += 1;
-  }
-
-  player.vx = direction * player.speed;
-
-  movePlayerX(player.vx * dt);
-  updatePlayerVertical(dt);
-
-  // 物理更新完成后立即检查雨棚保护
-  player.protected = isUnderCanopy();
-
-  player.invulnerable = Math.max(
-    0,
-    player.invulnerable - dt
-  );
-
-  // 镜头跟随
-  cameraX = Math.max(
-    0,
-    Math.min(worldWidth - W, player.x - W * 0.35)
-  );
-}
-
-// ==================== 跳跃 ====================
-
-function jump() {
-  if (
-    running &&
-    !gameOver &&
-    player.onGround &&
-    levelTransition <= 0
-  ) {
-    player.vy = -player.jumpSpeed;
-    player.onGround = false;
-    player.protected = false;
-  }
-}
-
-// ==================== 雨滴生成 ====================
-
-function spawnRaindrop() {
-  const speed =
-    280 +
-    Math.min(level - 1, 15) * 22 +
-    Math.random() * 150;
-
-  const x =
-    cameraX + Math.random() * (W + 160) - 80;
-
-  raindrops.push({
-    x,
-    y: -20 - Math.random() * 120,
-    width: 4,
-    height: 17 + Math.random() * 8,
-    vy: speed,
-    vx: -35 - Math.random() * 35
-  });
-}
-
-// ==================== 雨滴碰撞（关键修复） ====================
-
-function updateRaindrops(dt) {
-  for (let i = raindrops.length - 1; i >= 0; i--) {
-    const rain = raindrops[i];
-
-    // 更新雨滴位置
-    rain.y += rain.vy * dt;
-    rain.x += rain.vx * dt;
-
-    // 清除已经离开画面的雨滴
+  // 只允许在地面或平台上跳跃，避免无限跳。
+  function jump() {
     if (
-      rain.y > H + 30 ||
-      rain.x < cameraX - 100 ||
-      rain.x > cameraX + W + 100
+      running &&
+      !gameOver &&
+      player.onGround &&
+      levelTransition <= 0
     ) {
-      raindrops.splice(i, 1);
-      continue;
+      player.vy = -player.jumpSpeed;
+      player.onGround = false;
+      player.protected = false;
     }
+  }
 
-    /*
-     * 先检查雨棚保护，再检查雨滴与玩家碰撞。
-     * 即使保护状态还没刷新，也再次调用 isUnderCanopy()
-     * 作为兜底判断，避免站在雨棚上仍然失败。
-     */
-    if (player.protected || isUnderCanopy()) {
-      continue;
+  // ===== 雨滴系统 =====
+  function spawnRaindrop() {
+    const speed =
+      280 +
+      Math.min(level - 1, 15) * 22 +
+      Math.random() * 150;
+
+    const x = cameraX + Math.random() * (W + 160) - 80;
+
+    raindrops.push({
+      x,
+      y: -20 - Math.random() * 120,
+      width: 4,
+      height: 17 + Math.random() * 8,
+      vy: speed,
+      vx: -35 - Math.random() * 35
+    });
+  }
+
+  // 雨滴从上方穿过雨棚顶面时，被雨棚挡住。
+  function rainHitsCanopy(rain, oldY) {
+    const oldBottom = oldY + rain.height / 2;
+    const newBottom = rain.y + rain.height / 2;
+
+    return canopies.some(canopy => {
+      const horizontalOverlap =
+        rain.x >= canopy.x &&
+        rain.x <= canopy.x + canopy.width;
+
+      const crossedRoof =
+        oldBottom <= canopy.y &&
+        newBottom >= canopy.y;
+
+      return horizontalOverlap && crossedRoof;
+    });
+  }
+
+  function updateRaindrops(dt) {
+    for (let i = raindrops.length - 1; i >= 0; i--) {
+      const rain = raindrops[i];
+      const oldY = rain.y;
+
+      rain.y += rain.vy * dt;
+      rain.x += rain.vx * dt;
+
+      // 先判断雨棚是否挡住雨滴。
+      if (rainHitsCanopy(rain, oldY)) {
+        raindrops.splice(i, 1);
+        continue;
+      }
+
+      // 移除屏幕外的雨滴。
+      if (
+        rain.y > H + 30 ||
+        rain.x < cameraX - 100 ||
+        rain.x > cameraX + W + 100
+      ) {
+        raindrops.splice(i, 1);
+        continue;
+      }
+
+      // 玩家站在雨棚顶部时不会被雨滴击中。
+      if (player.protected || isUnderCanopy()) {
+        continue;
+      }
+
+      const rainBox = {
+        x: rain.x - rain.width / 2,
+        y: rain.y - rain.height / 2,
+        width: rain.width,
+        height: rain.height
+      };
+
+      if (
+        player.invulnerable <= 0 &&
+        intersects(rainBox, player)
+      ) {
+        endGame();
+        return;
+      }
     }
+  }
 
-    const rainBox = {
-      x: rain.x - rain.width / 2,
-      y: rain.y - rain.height / 2,
-      width: rain.width,
-      height: rain.height
+  // ===== 游戏流程 =====
+  function startGame() {
+    // 避免重复启动多个动画循环。
+    cancelAnimationFrame(frameId);
+    keys.clear();
+
+    level = 1;
+    score = 0;
+    gameOver = false;
+    running = true;
+
+    overlay.classList.add("hidden");
+    startButton.textContent = "重新开始";
+
+    buildLevel();
+
+    gameStateEl.textContent = "进行中";
+    lastTime = performance.now();
+
+    frameId = requestAnimationFrame(loop);
+  }
+
+  function endGame() {
+    if (gameOver) return;
+
+    running = false;
+    gameOver = true;
+    keys.clear();
+
+    overlayTitle.textContent = "被雨滴击中了！";
+    overlayText.textContent =
+      `你到达了第 ${level} 关，最终得分 ${score}。` +
+      "再试一次，记得站上雨棚顶部避雨。";
+
+    startButton.textContent = "重新开始";
+    overlay.classList.remove("hidden");
+
+    updateHud();
+  }
+
+  function completeLevel() {
+    if (levelTransition > 0) return;
+
+    score += 100 * level;
+    level += 1;
+
+    buildLevel();
+
+    // 切换关卡时短暂无敌，防止刚进入新关就被击中。
+    levelTransition = 0.65;
+    player.invulnerable = 0.65;
+
+    updateHud();
+  }
+
+  function checkDoor() {
+    const door = {
+      x: worldWidth - 100,
+      y: GROUND_Y - 88,
+      width: 52,
+      height: 88
     };
 
-    if (
-      player.invulnerable <= 0 &&
-      intersects(rainBox, player)
-    ) {
-      endGame();
-      return;
+    if (intersects(player, door)) {
+      completeLevel();
     }
   }
-}
 
-// ==================== 开始游戏 ====================
+  // ===== 绘制背景 =====
+  function drawBackground() {
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
 
-function startGame() {
-  level = 1;
-  score = 0;
-  gameOver = false;
-  running = true;
+    sky.addColorStop(0, "#183a5a");
+    sky.addColorStop(0.62, "#284f70");
+    sky.addColorStop(1, "#101f31");
 
-  overlay.classList.add("hidden");
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H);
 
-  buildLevel();
-
-  gameStateEl.textContent = "进行中";
-  lastTime = performance.now();
-
-  cancelAnimationFrame(frameId);
-  frameId = requestAnimationFrame(loop);
-}
-
-// ==================== 游戏失败 ====================
-
-function endGame() {
-  if (gameOver) return;
-
-  running = false;
-  gameOver = true;
-
-  overlayTitle.textContent = "被雨滴击中了！";
-
-  overlayText.textContent =
-    `你到达了第 ${level} 关，最终得分 ${score}。` +
-    "再试一次，记得站上蓝色雨棚顶部避雨。";
-
-  startButton.textContent = "重新开始";
-  overlay.classList.remove("hidden");
-
-  shelterStatus.classList.remove("visible");
-  updateHud();
-}
-
-// ==================== 通关与计分 ====================
-
-function completeLevel() {
-  if (levelTransition > 0) return;
-
-  score += 100 * level;
-  level += 1;
-
-  buildLevel();
-
-  levelTransition = 0.6;
-  updateHud();
-}
-
-function checkDoor() {
-  const door = {
-    x: worldWidth - 100,
-    y: GROUND_Y - 88,
-    width: 52,
-    height: 88
-  };
-
-  if (intersects(player, door)) {
-    completeLevel();
-  }
-}
-
-// ==================== 背景绘制 ====================
-
-function drawBackground() {
-  const sky = ctx.createLinearGradient(0, 0, 0, H);
-
-  sky.addColorStop(0, "#183a5a");
-  sky.addColorStop(0.62, "#284f70");
-  sky.addColorStop(1, "#101f31");
-
-  ctx.fillStyle = sky;
-  ctx.fillRect(0, 0, W, H);
-
-  // 远处山影
-  ctx.fillStyle = "#1a3b54";
-  ctx.beginPath();
-  ctx.moveTo(0, 355);
-
-  for (let x = 0; x <= W + 80; x += 80) {
-    ctx.lineTo(
-      x,
-      320 + Math.sin((x + cameraX * 0.12) * 0.012) * 28
-    );
-  }
-
-  ctx.lineTo(W, H);
-  ctx.lineTo(0, H);
-  ctx.closePath();
-  ctx.fill();
-
-  // 远景雨线
-  ctx.strokeStyle = "rgba(180,220,255,.08)";
-  ctx.lineWidth = 1;
-
-  for (let i = 0; i < 16; i++) {
-    const x = (i * 91 - cameraX * 0.18) % (W + 80);
-
+    // 远处山影。
+    ctx.fillStyle = "#1a3b54";
     ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x - 100, H);
-    ctx.stroke();
-  }
-}
+    ctx.moveTo(0, 355);
 
-// ==================== 世界绘制 ====================
-
-function drawWorld() {
-  ctx.save();
-  ctx.translate(-cameraX, 0);
-
-  // 地面和平台
-  for (const p of platforms) {
-    if (p.kind === "ground") {
-      const grd = ctx.createLinearGradient(0, p.y, 0, H);
-
-      grd.addColorStop(0, "#386b68");
-      grd.addColorStop(1, "#142f3b");
-
-      ctx.fillStyle = grd;
-      ctx.fillRect(p.x, p.y, p.width, p.height);
-
-      ctx.fillStyle = "#83d6a7";
-      ctx.fillRect(p.x, p.y, p.width, 5);
-
-    } else if (p.kind === "canopy") {
-      // 蓝色雨棚
-      ctx.fillStyle = "#147ca0";
-      ctx.fillRect(p.x, p.y, p.width, p.height);
-
-      // 顶部亮色边缘
-      ctx.fillStyle = "#73e8ff";
-      ctx.fillRect(p.x, p.y, p.width, 4);
-
-      // 雨棚遮挡区域的视觉效果
-      ctx.fillStyle = "rgba(100,220,255,.16)";
-      ctx.fillRect(p.x, p.y + p.height, p.width, 24);
-
-      // 雨棚支架
-      ctx.fillStyle = "#83cfe5";
-      ctx.fillRect(p.x + 8, p.y + p.height, 5, 30);
-      ctx.fillRect(
-        p.x + p.width - 13,
-        p.y + p.height,
-        5,
-        30
+    for (let x = 0; x <= W + 80; x += 80) {
+      ctx.lineTo(
+        x,
+        320 + Math.sin((x + cameraX * 0.12) * 0.012) * 28
       );
-
-    } else {
-      ctx.fillStyle = "#6f9bb5";
-      ctx.fillRect(p.x, p.y, p.width, p.height);
-
-      ctx.fillStyle = "#c1e8f6";
-      ctx.fillRect(p.x, p.y, p.width, 4);
     }
-  }
 
-  // 固定障碍
-  for (const o of obstacles) {
-    ctx.fillStyle = "#b26d4e";
-    ctx.fillRect(o.x, o.y, o.width, o.height);
-
-    ctx.fillStyle = "#e9a176";
-    ctx.fillRect(o.x, o.y, o.width, 6);
-
-    ctx.strokeStyle = "#75432f";
-    ctx.strokeRect(
-      o.x + 0.5,
-      o.y + 0.5,
-      o.width - 1,
-      o.height - 1
-    );
-  }
-
-  // 终点门
-  const doorX = worldWidth - 100;
-
-  ctx.fillStyle = "#e9c878";
-  ctx.fillRect(doorX, GROUND_Y - 88, 52, 88);
-
-  ctx.fillStyle = "#5c3c32";
-  ctx.fillRect(doorX + 7, GROUND_Y - 80, 38, 80);
-
-  ctx.fillStyle = "#ffd978";
-  ctx.fillRect(doorX + 12, GROUND_Y - 74, 28, 74);
-
-  ctx.fillStyle = "#5c3c32";
-  ctx.beginPath();
-  ctx.arc(doorX + 34, GROUND_Y - 38, 3, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = "#fff2be";
-  ctx.font = "bold 16px system-ui";
-  ctx.fillText("出口", doorX + 7, GROUND_Y - 98);
-
-  // 雨滴
-  ctx.lineCap = "round";
-
-  for (const r of raindrops) {
-    ctx.strokeStyle = "rgba(153,220,255,.88)";
-    ctx.lineWidth = r.width;
-
-    ctx.beginPath();
-    ctx.moveTo(r.x, r.y - r.height / 2);
-    ctx.lineTo(r.x - 4, r.y + r.height / 2);
-    ctx.stroke();
-  }
-
-  // 玩家绘制
-  const blink =
-    player.invulnerable > 0 &&
-    Math.floor(performance.now() / 80) % 2 === 0;
-
-  if (!blink) {
-    // 身体
-    ctx.fillStyle = player.protected ? "#9dffd0" : "#ffd166";
-    ctx.fillRect(player.x + 4, player.y + 14, 20, 23);
-
-    // 头部
-    ctx.fillStyle = "#ffcfaa";
-    ctx.beginPath();
-    ctx.arc(player.x + 14, player.y + 9, 9, 0, Math.PI * 2);
+    ctx.lineTo(W, H);
+    ctx.lineTo(0, H);
+    ctx.closePath();
     ctx.fill();
 
-    // 头发
-    ctx.fillStyle = "#563c37";
-    ctx.fillRect(player.x + 5, player.y + 1, 18, 6);
+    // 远景雨雾线。
+    ctx.strokeStyle = "rgba(180,220,255,.08)";
+    ctx.lineWidth = 1;
 
-    // 眼睛
-    ctx.fillStyle = "#142536";
-    ctx.fillRect(player.x + 9, player.y + 8, 2, 2);
-    ctx.fillRect(player.x + 17, player.y + 8, 2, 2);
+    for (let i = 0; i < 16; i++) {
+      const x = (i * 91 - cameraX * 0.18) % (W + 80);
 
-    // 腿
-    ctx.fillStyle = "#d5eaff";
-    ctx.fillRect(player.x + 5, player.y + 35, 7, 7);
-    ctx.fillRect(player.x + 17, player.y + 35, 7, 7);
-
-    // 受到雨棚保护时显示小伞
-    if (player.protected) {
-      ctx.fillStyle = "#a4f4ff";
       ctx.beginPath();
-      ctx.arc(
-        player.x + 14,
-        player.y - 8,
-        13,
-        Math.PI,
-        0
-      );
-      ctx.lineTo(player.x + 27, player.y - 8);
-      ctx.lineTo(player.x + 1, player.y - 8);
-      ctx.closePath();
-      ctx.fill();
-
-      ctx.strokeStyle = "#e7fbff";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(player.x + 14, player.y - 8);
-      ctx.lineTo(player.x + 14, player.y - 1);
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x - 100, H);
       ctx.stroke();
     }
   }
 
-  ctx.restore();
-}
+  // ===== 绘制游戏世界 =====
+  function drawWorld() {
+    ctx.save();
+    ctx.translate(-cameraX, 0);
 
-// ==================== 总绘制 ====================
+    // 绘制地面、平台和雨棚。
+    for (const p of platforms) {
+      if (p.kind === "ground") {
+        const grd = ctx.createLinearGradient(0, p.y, 0, H);
 
-function draw() {
-  drawBackground();
-  drawWorld();
+        grd.addColorStop(0, "#386b68");
+        grd.addColorStop(1, "#142f3b");
 
-  // 左上角保护状态
-  ctx.fillStyle = "rgba(5,16,28,.6)";
-  ctx.fillRect(14, 14, 205, 34);
+        ctx.fillStyle = grd;
+        ctx.fillRect(p.x, p.y, p.width, p.height);
 
-  ctx.fillStyle = "#e5f4ff";
-  ctx.font = "13px system-ui";
+        ctx.fillStyle = "#83d6a7";
+        ctx.fillRect(p.x, p.y, p.width, 5);
+      } else if (p.kind === "canopy") {
+        // 雨棚主体。
+        ctx.fillStyle = "#147ca0";
+        ctx.fillRect(p.x, p.y, p.width, p.height);
 
-  ctx.fillText(
-    player.protected
-      ? "☂ 避雨保护已开启"
-      : "前进并寻找蓝色雨棚",
-    25,
-    36
-  );
+        // 雨棚顶部高亮边缘。
+        ctx.fillStyle = "#73e8ff";
+        ctx.fillRect(p.x, p.y, p.width, 4);
 
-  shelterStatus.classList.toggle(
-    "visible",
-    running && player.protected
-  );
+        // 雨棚下方阴影。
+        ctx.fillStyle = "rgba(100,220,255,.16)";
+        ctx.fillRect(p.x, p.y + p.height, p.width, 24);
 
-  updateHud();
-}
+        // 雨棚支架。
+        ctx.fillStyle = "#83cfe5";
+        ctx.fillRect(p.x + 8, p.y + p.height, 5, 30);
+        ctx.fillRect(p.x + p.width - 13, p.y + p.height, 5, 30);
+      } else {
+        // 普通平台。
+        ctx.fillStyle = "#6f9bb5";
+        ctx.fillRect(p.x, p.y, p.width, p.height);
 
-// ==================== 主循环 ====================
+        ctx.fillStyle = "#c1e8f6";
+        ctx.fillRect(p.x, p.y, p.width, 4);
+      }
+    }
 
-function loop(now) {
-  if (!running) return;
+    // 固定障碍物。
+    for (const o of obstacles) {
+      ctx.fillStyle = "#b26d4e";
+      ctx.fillRect(o.x, o.y, o.width, o.height);
 
-  // 限制单帧时间，避免切换窗口后物理计算跳变
-  const dt = Math.min((now - lastTime) / 1000 || 0, 0.033);
-  lastTime = now;
+      ctx.fillStyle = "#e9a176";
+      ctx.fillRect(o.x, o.y, o.width, 6);
 
-  if (levelTransition > 0) {
-    levelTransition = Math.max(0, levelTransition - dt);
-  } else {
-    updatePlayer(dt);
+      ctx.strokeStyle = "#75432f";
+      ctx.strokeRect(
+        o.x + 0.5,
+        o.y + 0.5,
+        o.width - 1,
+        o.height - 1
+      );
+    }
 
-    // 关卡越高，雨滴生成越频繁
-    spawnTimer -= dt;
+    // 终点门。
+    const doorX = worldWidth - 100;
 
-    const spawnInterval = Math.max(
-      0.12,
-      0.48 - (level - 1) * 0.018
+    ctx.fillStyle = "#e9c878";
+    ctx.fillRect(doorX, GROUND_Y - 88, 52, 88);
+
+    ctx.fillStyle = "#5c3c32";
+    ctx.fillRect(doorX + 7, GROUND_Y - 80, 38, 80);
+
+    ctx.fillStyle = "#ffd978";
+    ctx.fillRect(doorX + 12, GROUND_Y - 74, 28, 74);
+
+    ctx.fillStyle = "#5c3c32";
+    ctx.beginPath();
+    ctx.arc(doorX + 34, GROUND_Y - 38, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#fff2be";
+    ctx.font = "bold 16px system-ui";
+    ctx.fillText("出口", doorX + 7, GROUND_Y - 98);
+
+    // 绘制雨滴。
+    ctx.lineCap = "round";
+
+    for (const r of raindrops) {
+      ctx.strokeStyle = "rgba(153,220,255,.88)";
+      ctx.lineWidth = r.width;
+
+      ctx.beginPath();
+      ctx.moveTo(r.x, r.y - r.height / 2);
+      ctx.lineTo(r.x - 4, r.y + r.height / 2);
+      ctx.stroke();
+    }
+
+    // 绘制玩家角色。
+    const blink =
+      player.invulnerable > 0 &&
+      Math.floor(performance.now() / 80) % 2 === 0;
+
+    if (!blink) {
+      // 身体。
+      ctx.fillStyle = player.protected ? "#9dffd0" : "#ffd166";
+      ctx.fillRect(player.x + 4, player.y + 14, 20, 23);
+
+      // 头部。
+      ctx.fillStyle = "#ffcfaa";
+      ctx.beginPath();
+      ctx.arc(player.x + 14, player.y + 9, 9, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 头发。
+      ctx.fillStyle = "#563c37";
+      ctx.fillRect(player.x + 5, player.y + 1, 18, 6);
+
+      // 眼睛。
+      ctx.fillStyle = "#142536";
+      ctx.fillRect(player.x + 9, player.y + 8, 2, 2);
+      ctx.fillRect(player.x + 17, player.y + 8, 2, 2);
+
+      // 腿。
+      ctx.fillStyle = "#d5eaff";
+      ctx.fillRect(player.x + 5, player.y + 35, 7, 7);
+      ctx.fillRect(player.x + 17, player.y + 35, 7, 7);
+
+      // 避雨时显示小伞。
+      if (player.protected) {
+        ctx.fillStyle = "#a4f4ff";
+
+        ctx.beginPath();
+        ctx.arc(
+          player.x + 14,
+          player.y - 8,
+          13,
+          Math.PI,
+          0
+        );
+        ctx.lineTo(player.x + 27, player.y - 8);
+        ctx.lineTo(player.x + 1, player.y - 8);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = "#e7fbff";
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+        ctx.moveTo(player.x + 14, player.y - 8);
+        ctx.lineTo(player.x + 14, player.y - 1);
+        ctx.stroke();
+      }
+    }
+
+    ctx.restore();
+
+    // 镜头边缘提示。
+    if (cameraX > 0) {
+      ctx.fillStyle = "rgba(5,15,26,.55)";
+      ctx.fillRect(0, 0, 6, H);
+    }
+  }
+
+  // ===== 绘制整帧 =====
+  function draw() {
+    drawBackground();
+    drawWorld();
+
+    // 左上角的避雨提示。
+    ctx.fillStyle = "rgba(5,16,28,.6)";
+    ctx.fillRect(14, 14, 205, 34);
+
+    ctx.fillStyle = "#e5f4ff";
+    ctx.font = "13px system-ui";
+
+    ctx.fillText(
+      player.protected
+        ? "☂ 避雨保护已开启"
+        : "前进并寻找蓝色雨棚",
+      25,
+      36
     );
 
-    while (spawnTimer <= 0) {
-      spawnRaindrop();
-      spawnTimer += spawnInterval;
+    shelterStatus.classList.toggle(
+      "visible",
+      running && player.protected
+    );
+
+    updateHud();
+  }
+
+  // ===== 游戏主循环 =====
+  function loop(now) {
+    if (!running) return;
+
+    // 限制单帧时间，减少切换标签页后的物理异常。
+    const dt = Math.min((now - lastTime) / 1000 || 0, 0.033);
+    lastTime = now;
+
+    if (levelTransition > 0) {
+      levelTransition = Math.max(0, levelTransition - dt);
+
+      player.invulnerable = Math.max(
+        0,
+        player.invulnerable - dt
+      );
+    } else {
+      updatePlayer(dt);
+
+      // 关卡越高，雨滴越频繁。
+      spawnTimer -= dt;
+
+      const spawnInterval = Math.max(
+        0.12,
+        0.48 - (level - 1) * 0.018
+      );
+
+      while (spawnTimer <= 0) {
+        spawnRaindrop();
+        spawnTimer += spawnInterval;
+      }
+
+      updateRaindrops(dt);
+
+      if (running) {
+        checkDoor();
+      }
     }
 
-    updateRaindrops(dt);
+    draw();
 
     if (running) {
-      checkDoor();
+      frameId = requestAnimationFrame(loop);
     }
   }
 
+  // ===== 键盘输入 =====
+  window.addEventListener("keydown", event => {
+    const supported = [
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "Space",
+      "KeyA",
+      "KeyD",
+      "KeyW"
+    ];
+
+    if (supported.includes(event.code)) {
+      event.preventDefault();
+    }
+
+    keys.add(event.code);
+
+    // 每次按下跳跃键只触发一次跳跃。
+    if (
+      event.code === "Space" ||
+      event.code === "ArrowUp" ||
+      event.code === "KeyW"
+    ) {
+      if (!event.repeat) {
+        jump();
+      }
+    }
+  });
+
+  window.addEventListener("keyup", event => {
+    keys.delete(event.code);
+  });
+
+  // 切换窗口时清除按键，避免角色一直移动。
+  window.addEventListener("blur", () => {
+    keys.clear();
+  });
+
+  startButton.addEventListener("click", startGame);
+
+  // 首屏初始化。
+  buildLevel();
   draw();
-
-  if (running) {
-    frameId = requestAnimationFrame(loop);
-  }
-}
-
-// ==================== 键盘操作 ====================
-
-window.addEventListener("keydown", event => {
-  const supported = [
-    "ArrowLeft",
-    "ArrowRight",
-    "ArrowUp",
-    "Space",
-    "KeyA",
-    "KeyD",
-    "KeyW"
-  ];
-
-  if (supported.includes(event.code)) {
-    event.preventDefault();
-  }
-
-  keys.add(event.code);
-
-  if (
-    event.code === "Space" ||
-    event.code === "ArrowUp" ||
-    event.code === "KeyW"
-  ) {
-    if (!event.repeat) {
-      jump();
-    }
-  }
-});
-
-window.addEventListener("keyup", event => {
-  keys.delete(event.code);
-});
-
-window.addEventListener("blur", () => {
-  keys.clear();
-});
-
-startButton.addEventListener("click", startGame);
-
-// 初始化游戏画面
-buildLevel();
-draw();
-
+})();
 </script>
 </body>
 </html>
